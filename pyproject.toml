@@ -1,0 +1,24 @@
+[tool.poetry]
+name = "concert"
+version = "0.1.0"
+description = ""
+authors = ["oohlearn <learnooh@gmail.com>"]
+readme = "README.md"
+
+[tool.poetry.dependencies]
+python = "^3.10"
+bootstrap-flask = "^2.4.0"
+flask-ckeditor = "^0.5.1"
+flask-login = "^0.6.3"
+flask-wtf = "^1.2.1"
+wtforms = "^3.1.2"
+werkzeug = "^3.0.2"
+flask = "^3.0.3"
+flask-sqlalchemy = "^3.1.1"
+sqlalchemy = "^2.0.29"
+gunicorn = "^21.2.0"
+
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
