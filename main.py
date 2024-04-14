@@ -269,6 +269,8 @@ def shopping():
 @app.route("/check_order", methods=["GET", "POST"])
 def check_order():
     form = CheckForm()
+    order_info = {}
+    order_list = {}
     if "shopping_form_data" in session:
         cost = session['shopping_form_data']["shopping_cost"] + session['ticket_form_data']["ticket_cost"]
         new_order = Order(
