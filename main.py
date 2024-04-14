@@ -198,6 +198,7 @@ def admin_only(func):
 @app.route("/new-order", methods=["GET", "POST"])
 def add_new_post():
     form = TicketForm()
+    session.pop('shopping_form_data', None)
     if form.ticket.data > 2:
         flash("門票一人限購兩張")
     if form.email.data is None or form.name.data is None or form.phone.data is None:
@@ -225,7 +226,6 @@ def add_new_post():
 @app.route("/shopping", methods=["POST", "GET"])
 def shopping():
     shopping_form = ShoppingForm()
-    session.pop('ticket_form_data', None)
     session.pop('shopping_form_data', None)
     if shopping_form.validate_on_submit():
         cost = (shopping_form.bag.data*300 + shopping_form.folder.data*130
@@ -309,7 +309,7 @@ def check_order():
             school=session['ticket_form_data']['school'],
             email=session['ticket_form_data']['email'],
             total_cost=cost)
-    if  session['ticket_form_data']['school']:
+    if session['ticket_form_data']['school']:
         discount = "是"
     else:
         discount = "否"

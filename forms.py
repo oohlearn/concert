@@ -17,8 +17,8 @@ class TicketForm(FlaskForm):
 
 
 class ShoppingForm(FlaskForm):
-    bag = IntegerField("帆布包（定價：300元/個）", default=0, validators=[NumberRange(min=0)])
-    folder = IntegerField("譜夾（定價：130元/個）", default=0, validators=[NumberRange(min=0)])
+    bag = IntegerField("帆布包（售價：300元/個）", default=0, validators=[NumberRange(min=0)])
+    folder = IntegerField("譜夾（售價：130元/個）", default=0, validators=[NumberRange(min=0)])
     cloth_a_s = IntegerField("團T：大人 - S號（身高155公分）", default=0, validators=[NumberRange(min=0)])
     cloth_a_m = IntegerField("團T：大人 - M號（身高160公分）", default=0, validators=[NumberRange(min=0)])
     cloth_a_l = IntegerField("團T：大人 - L號（身高165公分）", default=0, validators=[NumberRange(min=0)])
