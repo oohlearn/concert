@@ -35,11 +35,11 @@ messages %}
       </ul>
       <p>商品明細</p>
       <ol>
-        {%for key, value in order_list.items() %} {% if value != 0 %}
+        {%for key, value in order_list.items() %} {% if value != None %}
         <li>{{key}}：{{value}}</li>
         {%endif%} {%endfor%}
       </ol>
-      <h3>總金額：{{cost}}</h3>
+      <h3 style="color: brown">總金額：{{cost}}</h3>
       <hr />
       <br />
       <p>

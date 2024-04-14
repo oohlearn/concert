@@ -32,10 +32,12 @@
         <p class="flash">{{ message }}</p>
         <p>{% endfor %} {%endif%} {%endwith%}</p>
         <h3>下單注意事項：</h3>
-        <p>
-          送出訂單後請在下個頁面確認訂單明細及總金額<br />
-          同一訂購者只能下一筆訂單，若有需要加單，請加數字，如「李小明2」
-        </p>
+        <ul>
+          <li>送出訂單後請在下個頁面確認訂單明細及總金額</li>
+          <li>
+            同一訂購者只能下一筆訂單，若有需要加單，請加數字，如「李小明2」
+          </li>
+        </ul>
         {{ ckeditor.load() }} {{ ckeditor.config(name='body') }}
         {{render_form(form, novalidate=True, button_map={"submit": "primary"})
         }}
