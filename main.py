@@ -45,16 +45,24 @@ class Order(db.Model):
     name: Mapped[str] = mapped_column(String(250), unique=True)
     phone: Mapped[str] = mapped_column(String(250))
     date: Mapped[str] = mapped_column(String(250), nullable=False)
-    ticket: Mapped[int] = mapped_column(Integer)
+    ticket: Mapped[int] = mapped_column(Integer, nullable=True)
     email: Mapped[str] = mapped_column(Text, nullable=False)
     school: Mapped[bool] = mapped_column(Boolean, default=False)
     bag: Mapped[int] = mapped_column(Integer, nullable=True)
     folder: Mapped[int] = mapped_column(Integer, nullable=True)
-    cloth_xs: Mapped[int] = mapped_column(Integer, nullable=True)
-    cloth_s: Mapped[int] = mapped_column(Integer, nullable=True)
-    cloth_m: Mapped[int] = mapped_column(Integer, nullable=True)
-    cloth_l: Mapped[int] = mapped_column(Integer, nullable=True)
-    cloth_xl: Mapped[int] = mapped_column(Integer, nullable=True)
+    cloth_a_s: Mapped[int] = mapped_column(Integer, nullable=True)
+    cloth_a_m: Mapped[int] = mapped_column(Integer, nullable=True)
+    cloth_a_l: Mapped[int] = mapped_column(Integer, nullable=True)
+    cloth_a_xl: Mapped[int] = mapped_column(Integer, nullable=True)
+    cloth_a_xxl: Mapped[int] = mapped_column(Integer, nullable=True)
+    cloth_a_3xl: Mapped[int] = mapped_column(Integer, nullable=True)
+    cloth_a_4xl: Mapped[int] = mapped_column(Integer, nullable=True)
+    cloth_c_s: Mapped[int] = mapped_column(Integer, nullable=True)
+    cloth_c_m: Mapped[int] = mapped_column(Integer, nullable=True)
+    cloth_c_l: Mapped[int] = mapped_column(Integer, nullable=True)
+    cloth_c_xl: Mapped[int] = mapped_column(Integer, nullable=True)
+    cloth_c_3xl: Mapped[int] = mapped_column(Integer, nullable=True)
+    cloth_c_4xl: Mapped[int] = mapped_column(Integer, nullable=True)
     total_cost: Mapped[int] = mapped_column(Integer, nullable=True)
     author_id = mapped_column(Integer, db.ForeignKey("users.id"))
     author = relationship("User", back_populates="posts")
@@ -208,16 +216,37 @@ def add_new_post():
 def shopping():
     shopping_form = ShoppingForm()
     if shopping_form.validate_on_submit():
-        cost = (shopping_form.bag.data*300 + shopping_form.folder.data*130 + shopping_form.cloth_xs.data*200 + shopping_form.cloth_s.data*200 + shopping_form.cloth_m.data*200 + shopping_form.cloth_l.data*200
-                + shopping_form.cloth_xl.data*200)
+        cost = (shopping_form.bag.data*300 + shopping_form.folder.data*130
+                + shopping_form.cloth_a_s.data*200
+                + shopping_form.cloth_a_m.data*200
+                + shopping_form.cloth_a_l.data*200
+                + shopping_form.cloth_a_xl.data*200
+                + shopping_form.cloth_a_xxl.data*200
+                + shopping_form.cloth_a_3xl.data*200
+                + shopping_form.cloth_a_4xl.data*200
+                + shopping_form.cloth_c_s.data*200
+                + shopping_form.cloth_c_m.data*200
+                + shopping_form.cloth_c_l.data*200
+                + shopping_form.cloth_c_xl.data*200
+                + shopping_form.cloth_c_3xl.data*200
+                + shopping_form.cloth_c_4xl.data*200
+                )
         session['shopping_form_data'] = {
             'bag': shopping_form.bag.data,
             'folder': shopping_form.folder.data,
-            'cloth_xs': shopping_form.cloth_xs.data,
-            'cloth_s': shopping_form.cloth_s.data,
-            'cloth_m': shopping_form.cloth_m.data,
-            'cloth_l': shopping_form.cloth_l.data,
-            'cloth_xl': shopping_form.cloth_xl.data,
+            "cloth_a_s": shopping_form.cloth_a_s.data,
+            "cloth_a_m": shopping_form.cloth_a_m.data,
+            "cloth_a_l": shopping_form.cloth_a_l.data,
+            "cloth_a_xl": shopping_form.cloth_a_xl.data,
+            "cloth_a_xxl": shopping_form.cloth_a_xxl.data,
+            "cloth_a_3xl": shopping_form.cloth_a_3xl.data,
+            "cloth_a_4xl": shopping_form.cloth_a_4xl.data,
+            "cloth_c_s": shopping_form.cloth_c_s.data,
+            "cloth_c_m": shopping_form.cloth_c_m.data,
+            "cloth_c_l": shopping_form.cloth_c_l.data,
+            "cloth_c_xl": shopping_form.cloth_c_xl.data,
+            "cloth_c_3xl": shopping_form.cloth_c_3xl.data,
+            "cloth_c_4xl": shopping_form.cloth_c_4xl.data,
             'shopping_cost': cost
         }
         return redirect(url_for("check_order"))
@@ -239,11 +268,19 @@ def check_order():
             email=session['ticket_form_data']['email'],
             bag=session['shopping_form_data']['bag'],
             folder=session['shopping_form_data']['folder'],
-            cloth_xs=session['shopping_form_data']['cloth_xs'],
-            cloth_s=session['shopping_form_data']['cloth_s'],
-            cloth_m=session['shopping_form_data']['cloth_m'],
-            cloth_l=session['shopping_form_data']['cloth_l'],
-            cloth_xl=session['shopping_form_data']['cloth_xl'],
+            cloth_a_s=session["shopping_form_data"]["cloth_a_s"],
+            cloth_a_m=session["shopping_form_data"]["cloth_a_m"],
+            cloth_a_l=session["shopping_form_data"]["cloth_a_l"],
+            cloth_a_xl=session["shopping_form_data"]["cloth_a_xl"],
+            cloth_a_xxl=session["shopping_form_data"]["cloth_a_xxl"],
+            cloth_a_3xl=session["shopping_form_data"]["cloth_a_3xl"],
+            cloth_a_4xl=session["shopping_form_data"]["cloth_a_4xl"],
+            cloth_c_s=session["shopping_form_data"]["cloth_c_s"],
+            cloth_c_m=session["shopping_form_data"]["cloth_c_s"],
+            cloth_c_l=session["shopping_form_data"]["cloth_c_s"],
+            cloth_c_xl=session["shopping_form_data"]["cloth_c_s"],
+            cloth_c_3xl=session["shopping_form_data"]["cloth_c_s"],
+            cloth_c_4xl=session["shopping_form_data"]["cloth_c_s"],
             total_cost=cost)
     else:
         cost = session['ticket_form_data']["ticket_cost"]

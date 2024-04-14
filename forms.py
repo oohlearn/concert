@@ -9,7 +9,7 @@ class TicketForm(FlaskForm):
     name = StringField("訂購者姓名", validators=[DataRequired()])
     phone = StringField("連絡電話", validators=[DataRequired()])
     email = StringField("Email", validators=[DataRequired()])
-    ticket = IntegerField("欲購買票數（定價：500元/張）")
+    ticket = IntegerField("欲購買票數（定價：500元/張）", default=0)
     school = BooleanField("是否為團內購票(團內購票享有原價75折優惠，350元/張")
     sit_together = BooleanField("座位是否需連號？")
     submit = SubmitField("送出訂單")
@@ -19,11 +19,21 @@ class TicketForm(FlaskForm):
 class ShoppingForm(FlaskForm):
     bag = IntegerField("帆布包（定價：300元/個）", default=0)
     folder = IntegerField("譜夾（定價：130元/個）", default=0)
-    cloth_xs = IntegerField("團T-XS號（定價：200元/件）", default=0)
-    cloth_s = IntegerField("團T-S號（定價：200元/件）", default=0)
-    cloth_m = IntegerField("團T-M號（定價：200元/件）", default=0)
-    cloth_l = IntegerField("團T-L號（定價：200元/件）", default=0)
-    cloth_xl = IntegerField("團T-XL號（定價：200元/件）", default=0)
+    cloth_a_s = IntegerField("團T：大人 - S號（身高155公分）", default=0)
+    cloth_a_m = IntegerField("團T：大人 - M號（身高160公分）", default=0)
+    cloth_a_l = IntegerField("團T：大人 - L號（身高165公分）", default=0)
+    cloth_a_xl = IntegerField("團T：大人 - XL號（身高170公分）", default=0)
+    cloth_a_xxl = IntegerField("團T：大人 - XXL號（身高175公分）", default=0)
+    cloth_a_3xl = IntegerField("團T：大人 - 3XL號（身高180公分）", default=0)
+    cloth_a_4xl = IntegerField("團T：大人 - 4XL號（身高185公分）", default=0)
+    cloth_c_s = IntegerField("團T：小孩 - s號（身高90公分）", default=0)
+    cloth_c_m = IntegerField("團T：小孩 - m號（身高90公分）", default=0)
+    cloth_c_l = IntegerField("團T：小孩 - l號（身高90公分）", default=0)
+    cloth_c_xl = IntegerField("團T：小孩 - xl號（身高90公分）", default=0)
+    cloth_c_3xl = IntegerField("團T：小孩 - 3xl號（身高90公分）", default=0)
+    cloth_c_4xl = IntegerField("團T：小孩 - 4xl號（身高90公分）", default=0)
+
+
     submit = SubmitField("送出訂單")
 
 
