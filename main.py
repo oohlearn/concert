@@ -13,13 +13,18 @@ from typing import List
 # Import your forms from the forms.py
 from forms import TicketForm, RegisterForm, LoginForm, CommentForm, ShoppingForm, CheckForm
 
+from config import Config
+
+
 import os
 
 
 app = Flask(__name__)
-app.config['SECRET_KEY'] = "8BYkEfBA6O6donzWlSihBXox7C0sKR6b"
+app.config.from_object(Config)
+app.config['SECRET_KEY']
 ckeditor = CKEditor(app)
 Bootstrap5(app)
+
 
 # TODO: Configure Flask-Login
 login_manager = LoginManager()
@@ -32,7 +37,7 @@ def load_user(user_id):
 # CREATE DATABASE
 class Base(DeclarativeBase):
     pass
-app.config['SQLALCHEMY_DATABASE_URI'] = "sqlite:///concert.db"
+app.config['SQLALCHEMY_DATABASE_URI']
 
 db = SQLAlchemy(model_class=Base)
 db.init_app(app)
