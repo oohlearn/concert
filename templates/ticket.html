@@ -31,8 +31,10 @@
         message in messages %}
         <p class="flash">{{ message }}</p>
         <p>{% endfor %} {%endif%} {%endwith%}</p>
-        {{ ckeditor.load() }} {{ ckeditor.config(name='body') }} {{
-        render_form(form, novalidate=True, button_map={"submit": "primary"}) }}
+        <p>送出訂單後請在下個頁面確認訂單明細及總金額</p>
+        {{ ckeditor.load() }} {{ ckeditor.config(name='body') }}
+        {{render_form(form, novalidate=True, button_map={"submit": "primary"})
+        }}
       </div>
     </div>
   </div>

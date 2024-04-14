@@ -198,9 +198,11 @@ def admin_only(func):
 @app.route("/new-order", methods=["GET", "POST"])
 def add_new_post():
     form = TicketForm()
+    if form.ticket.data > 2:
+        flash("門票一人限購兩張")
+    if form.email.data is None or form.name.data is None or form.phone.data is None:
+        flash("訂購人姓名、電話及email為必填資訊")
     if form.validate_on_submit():
-        if form.ticket.data > 2:
-            flash("門票一人限購兩張")
         if form.school.data:
             cost = form.ticket.data * 350
         else:
@@ -303,14 +305,44 @@ def check_order():
             school=session['ticket_form_data']['school'],
             email=session['ticket_form_data']['email'],
             total_cost=cost)
+    if  session['ticket_form_data']['school']:
+        discount = "是"
+    else:
+        discount = "否"
+    order_info = {
+            "訂購者姓名": new_order.name,
+            "電話": new_order.phone,
+            "email": new_order.email,
+            "團內購票優惠身分": discount,
+    }
+    order_list = {
+            "音樂會門票": new_order.ticket,
+            "帆布包": new_order.bag,
+            "譜夾": new_order.folder,
+            "團T：大人 - S 號（身高155公分）":new_order.cloth_a_s,
+            "團T：大人 - M 號（身高160公分）":new_order.cloth_a_m,
+            "團T：大人 - L 號（身高165公分）":new_order.cloth_a_l,
+            "團T：大人 - XL 號（身高170公分）":new_order.cloth_a_xl,
+            "團T：大人 - XXL 號（身高175公分）":new_order.cloth_a_xxl,
+            "團T：大人 - 3XL 號（身高180公分）":new_order.cloth_a_3xl,
+            "團T：大人 - 4XL 號（身高185公分）":new_order.cloth_a_4xl,
+            "團T：小孩 - s 號（身高90公分）":new_order.cloth_c_s,
+            "團T：小孩 - m 號（身高100公分）":new_order.cloth_c_m,
+            "團T：小孩 - L 號（身高110公分）":new_order.cloth_c_l,
+            "團T：小孩 - XL 號（身高120公分）":new_order.cloth_c_xl,
+            "團T：小孩 - XXL 號（身高130公分）":new_order.cloth_c_xxl,
+            "團T：小孩 - 3XL 號（身高140公分）":new_order.cloth_c_3xl,
+            "團T：小孩 - 4XL 號（身高150公分）":new_order.cloth_c_4xl
+        }
     if form.validate_on_submit():
+
         db.session.add(new_order)
         db.session.commit()
         flash("恭喜您，下單成功，若有訂單問題，請聯絡小佳老師")
         session.pop('ticket_form_data', None)
         session.pop('shopping_form_data', None)
         return redirect(url_for("home"))
-    return render_template("check.html", form=form, session=session, cost=cost)
+    return render_template("check.html", form=form, session=session, cost=cost, order_list=order_list, order_info=order_info)
 
 
 # TODO: Use a decorator so only an admin user can edit a post

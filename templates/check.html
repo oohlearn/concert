@@ -26,13 +26,30 @@ messages %}
 <div class="container px-4 px-lg-5">
   <div class="row gx-4 gx-lg-5 justify-content-center">
     <div class="col-md-10 col-lg-8 col-xl-7">
-      <p>您的訂單如下，請確認以下內容是否正確:</p>
-
+      <h3>您的訂單資料如下，請確認以下內容是否正確</h3>
+      <p>訂購者資訊</p>
       <ul>
-        <li>總票價:{{session['ticket_form_data']["ticket_cost"]}}</li>
-        <li>總票價:{{session['ticket_form_data'].ticket_cost}}</li>
+        {%for key, value in order_info.items() %}
+        <li>{{key}}：{{value}}</li>
+        {%endfor%}
       </ul>
+      <p>商品明細</p>
+      <ol>
+        {%for key, value in order_list.items() %} {% if value != 0 %}
+        <li>{{key}}：{{value}}</li>
+        {%endif%} {%endfor%}
+      </ol>
       <h3>總金額：{{cost}}</h3>
+      <hr />
+      <br />
+      <p>
+        商品價格<br />
+        音樂會門票：原價500元張，團內購票350/張<br />
+        帆布包：300元/個<br />
+        譜夾：130元/個<br />
+        團T：200元/件
+      </p>
+
       <!-- Post preview-->
       {% for post in all_posts %}
       <div class="post-preview">
