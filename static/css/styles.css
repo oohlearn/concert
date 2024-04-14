@@ -11196,3 +11196,14 @@ header.masthead .post-heading .meta a {
   font-weight: bold;
   font-size: 40px;
 }
+
+.item_img {
+  max-width: 40%;
+  max-height: 40%;
+  margin-right: 20px;
+}
+
+.img_container {
+  overflow: auto;
+  justify-content: center;
+}

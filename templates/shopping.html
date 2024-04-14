@@ -26,8 +26,43 @@ include "header.html" %}
   <div class="container">
     <div class="row">
       <div class="col-lg-8 col-md-10 mx-auto">
-        <h3>團T為200元/件</h3>
+        <h3>團T為 200元/件</h3>
         <h3>送出訂單後請在下個頁面確認訂單明細及總金額</h3>
+        <br />
+        <div class="img_container">
+          <h5>帆布包參考照</h5>
+          <img
+            class="item_img"
+            src="/static/assets/mockup-帆布-正面_0.png"
+            alt="帆布包正面"
+          />
+          <img
+            class="item_img"
+            src="/static/assets/mockup-帆布-背面-2_0.png"
+            alt="帆布包背面"
+          />
+        </div>
+        <br />
+        <div class="img_container">
+          <h5>譜夾參考照</h5>
+          <img class="item_img" src="/static/assets/譜夾1.jpg" alt="譜夾正面" />
+          <img class="item_img" src="/static/assets/譜夾2.jpg" alt="譜夾背面" />
+        </div>
+        <br />
+        <div class="img_container">
+          <h5>團T參考照</h5>
+          <img
+            class="item_img"
+            src="/static/assets/團T正面.png"
+            alt="團T正面"
+          />
+          <img
+            class="item_img"
+            src="/static/assets/團T背面.png"
+            alt="團T背面"
+          />
+        </div>
+        <hr />
         <br />
         {{ ckeditor.load() }} {{ ckeditor.config(name='body') }} {{
         render_form(form, novalidate=True, button_map={"submit": "primary"}) }}

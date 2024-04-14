@@ -225,6 +225,8 @@ def add_new_post():
 @app.route("/shopping", methods=["POST", "GET"])
 def shopping():
     shopping_form = ShoppingForm()
+    session.pop('ticket_form_data', None)
+    session.pop('shopping_form_data', None)
     if shopping_form.validate_on_submit():
         cost = (shopping_form.bag.data*300 + shopping_form.folder.data*130
                 + shopping_form.cloth_a_s.data*200
@@ -391,4 +393,4 @@ def contact():
 
 
 if __name__ == "__main__":
-    app.run(debug=False, port=5002)
+    app.run(debug=True, port=5002)
