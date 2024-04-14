@@ -13,7 +13,8 @@
           {% if is_edit: %}
           <h1>Edit Post</h1>
           {% else: %}
-          <h1>十周年音樂會門票訂購</h1>
+          <h1>成德國小國樂團十周年音樂會</h1>
+          <h1>門票訂購</h1>
           {% endif %}
           <span class="subheading">113年6月30日@台北生技園區多功能廳</span>
         </div>
@@ -26,6 +27,10 @@
   <div class="container">
     <div class="row">
       <div class="col-lg-8 col-md-10 mx-auto">
+        {% with messages = get_flashed_messages() %} {% if messages %} {%for
+        message in messages %}
+        <p class="flash">{{ message }}</p>
+        <p>{% endfor %} {%endif%} {%endwith%}</p>
         {{ ckeditor.load() }} {{ ckeditor.config(name='body') }} {{
         render_form(form, novalidate=True, button_map={"submit": "primary"}) }}
       </div>

@@ -199,6 +199,8 @@ def admin_only(func):
 def add_new_post():
     form = TicketForm()
     if form.validate_on_submit():
+        if form.ticket.data > 2:
+            flash("門票一人限購兩張")
         if form.school.data:
             cost = form.ticket.data * 350
         else:
@@ -304,7 +306,7 @@ def check_order():
     if form.validate_on_submit():
         db.session.add(new_order)
         db.session.commit()
-        flash("Successfully logout")
+        flash("恭喜您，下單成功，若有訂單問題，請聯絡小佳老師")
         session.pop('ticket_form_data', None)
         session.pop('shopping_form_data', None)
         return redirect(url_for("home"))
@@ -355,4 +357,4 @@ def contact():
 
 
 if __name__ == "__main__":
-    app.run(debug=False, port=5002)
+    app.run(debug=True, port=5002)

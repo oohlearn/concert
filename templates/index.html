@@ -25,6 +25,17 @@ messages %}
 <div class="container px-4 px-lg-5">
   <div class="row gx-4 gx-lg-5 justify-content-center">
     <div class="col-md-10 col-lg-8 col-xl-7">
+      <!-- New Post -->
+      <h3>匯款帳號：1234567890</h3>
+      <!-- TODO: Only show Create Post button if user id is 1 (admin user) -->
+      <div class="d-flex justify-content-end mb-4">
+        <a
+          class="btn btn-primary float-right"
+          href="{{url_for('add_new_post')}}"
+          >由此下單</a
+        >
+      </div>
+      {% if user_id == 1 :%}
       <!-- Post preview-->
       {% for post in all_posts %}
       <div class="post-preview">
@@ -43,18 +54,6 @@ messages %}
       <!-- Divider-->
       <hr class="my-4" />
       {% endfor %}
-
-      <!-- New Post -->
-      <!-- TODO: Only show Create Post button if user id is 1 (admin user) -->
-      <div class="d-flex justify-content-end mb-4">
-        <a
-          class="btn btn-primary float-right"
-          href="{{url_for('add_new_post')}}"
-          >Create New Post</a
-        >
-      </div>
-      {% if user_id == 1 :%}
-
       <!-- Pager-->
       <div class="d-flex justify-content-end mb-4">
         <a class="btn btn-secondary text-uppercase" href="#!">Older Posts →</a>
