@@ -66,6 +66,7 @@ class Order(db.Model):
     cloth_c_m: Mapped[int] = mapped_column(Integer, nullable=True)
     cloth_c_l: Mapped[int] = mapped_column(Integer, nullable=True)
     cloth_c_xl: Mapped[int] = mapped_column(Integer, nullable=True)
+    cloth_c_xxl: Mapped[int] = mapped_column(Integer, nullable=True)
     cloth_c_3xl: Mapped[int] = mapped_column(Integer, nullable=True)
     cloth_c_4xl: Mapped[int] = mapped_column(Integer, nullable=True)
     total_cost: Mapped[int] = mapped_column(Integer, nullable=True)
@@ -233,6 +234,7 @@ def shopping():
                 + shopping_form.cloth_c_m.data*200
                 + shopping_form.cloth_c_l.data*200
                 + shopping_form.cloth_c_xl.data*200
+                + shopping_form.cloth_c_xxl.data*200
                 + shopping_form.cloth_c_3xl.data*200
                 + shopping_form.cloth_c_4xl.data*200
                 )
@@ -250,6 +252,7 @@ def shopping():
             "cloth_c_m": shopping_form.cloth_c_m.data,
             "cloth_c_l": shopping_form.cloth_c_l.data,
             "cloth_c_xl": shopping_form.cloth_c_xl.data,
+            "cloth_c_xxl": shopping_form.cloth_c_xxl.data,
             "cloth_c_3xl": shopping_form.cloth_c_3xl.data,
             "cloth_c_4xl": shopping_form.cloth_c_4xl.data,
             'shopping_cost': cost
@@ -281,11 +284,12 @@ def check_order():
             cloth_a_3xl=session["shopping_form_data"]["cloth_a_3xl"],
             cloth_a_4xl=session["shopping_form_data"]["cloth_a_4xl"],
             cloth_c_s=session["shopping_form_data"]["cloth_c_s"],
-            cloth_c_m=session["shopping_form_data"]["cloth_c_s"],
-            cloth_c_l=session["shopping_form_data"]["cloth_c_s"],
-            cloth_c_xl=session["shopping_form_data"]["cloth_c_s"],
-            cloth_c_3xl=session["shopping_form_data"]["cloth_c_s"],
-            cloth_c_4xl=session["shopping_form_data"]["cloth_c_s"],
+            cloth_c_m=session["shopping_form_data"]["cloth_c_m"],
+            cloth_c_l=session["shopping_form_data"]["cloth_c_l"],
+            cloth_c_xl=session["shopping_form_data"]["cloth_c_xl"],
+            cloth_c_xxl=session["shopping_form_data"]["cloth_c_xxl"],
+            cloth_c_3xl=session["shopping_form_data"]["cloth_c_3xl"],
+            cloth_c_4xl=session["shopping_form_data"]["cloth_c_4xl"],
             total_cost=cost)
     else:
         cost = session['ticket_form_data']["ticket_cost"]

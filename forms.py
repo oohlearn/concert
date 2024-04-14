@@ -27,11 +27,12 @@ class ShoppingForm(FlaskForm):
     cloth_a_3xl = IntegerField("團T：大人 - 3XL號（身高180公分）", default=0)
     cloth_a_4xl = IntegerField("團T：大人 - 4XL號（身高185公分）", default=0)
     cloth_c_s = IntegerField("團T：小孩 - s號（身高90公分）", default=0)
-    cloth_c_m = IntegerField("團T：小孩 - m號（身高90公分）", default=0)
-    cloth_c_l = IntegerField("團T：小孩 - l號（身高90公分）", default=0)
-    cloth_c_xl = IntegerField("團T：小孩 - xl號（身高90公分）", default=0)
-    cloth_c_3xl = IntegerField("團T：小孩 - 3xl號（身高90公分）", default=0)
-    cloth_c_4xl = IntegerField("團T：小孩 - 4xl號（身高90公分）", default=0)
+    cloth_c_m = IntegerField("團T：小孩 - m號（身高100公分）", default=0)
+    cloth_c_l = IntegerField("團T：小孩 - l號（身高110公分）", default=0)
+    cloth_c_xl = IntegerField("團T：小孩 - xl號（身高120公分）", default=0)
+    cloth_c_xxl = IntegerField("團T：小孩 - xxl號（身高130公分）", default=0)
+    cloth_c_3xl = IntegerField("團T：小孩 - 3xl號（身高140公分）", default=0)
+    cloth_c_4xl = IntegerField("團T：小孩 - 4xl號（身高150公分）", default=0)
 
 
     submit = SubmitField("送出訂單")
