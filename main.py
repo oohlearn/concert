@@ -297,7 +297,7 @@ def check_order():
             name=session['ticket_form_data']['name'],
             ticket=session['ticket_form_data']['ticket'],
             date=date.today().strftime("%B %d, %Y"),
-            phone=session.ticket_form_data.phone,
+            phone=session['ticket_form_data']["phone"],
             school=session['ticket_form_data']['school'],
             email=session['ticket_form_data']['email'],
             total_cost=cost)
