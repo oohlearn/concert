@@ -338,7 +338,7 @@ def check_order():
 
         db.session.add(new_order)
         db.session.commit()
-        flash("恭喜您，下單成功，若有訂單問題，請聯絡小佳老師")
+        flash("訂單已送出，若有問題，請聯絡小佳老師")
         session.pop('ticket_form_data', None)
         session.pop('shopping_form_data', None)
         return redirect(url_for("home"))

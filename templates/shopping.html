@@ -26,7 +26,9 @@ include "header.html" %}
   <div class="container">
     <div class="row">
       <div class="col-lg-8 col-md-10 mx-auto">
-        <p>團T為200元/件</p>
+        <h3>團T為200元/件</h3>
+        <h3>送出訂單後請在下個頁面確認訂單明細及總金額</h3>
+        <br />
         {{ ckeditor.load() }} {{ ckeditor.config(name='body') }} {{
         render_form(form, novalidate=True, button_map={"submit": "primary"}) }}
       </div>
