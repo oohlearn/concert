@@ -42,8 +42,7 @@ app.config['SQLALCHEMY_DATABASE_URI'] =os.environ.get("SQLALCHEMY_DATABASE_URI")
 
 db = SQLAlchemy(model_class=Base)
 db.init_app(app)
-ticket_open = os.environ.get("TICKET_OPEN")
-# ticket_open = False
+ticket_open = False
 
 # CONFIGURE TABLES
 class Order(db.Model):
