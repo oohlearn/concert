@@ -11,7 +11,8 @@ from functools import wraps
 from werkzeug.security import generate_password_hash, check_password_hash
 from typing import List
 # Import your forms from the forms.py
-from forms import TicketForm, RegisterForm, LoginForm, CommentForm, ShoppingForm, CheckForm
+from forms import (TicketForm, RegisterForm, LoginForm, 
+CommentForm, ShoppingForm, CheckForm, InfoForm)
 
 from config import Config
 
@@ -41,7 +42,8 @@ app.config['SQLALCHEMY_DATABASE_URI'] =os.environ.get("SQLALCHEMY_DATABASE_URI")
 
 db = SQLAlchemy(model_class=Base)
 db.init_app(app)
-
+ticket_open = os.environ.get("TICKET_OPEN")
+# ticket_open = False
 
 # CONFIGURE TABLES
 class Order(db.Model):
@@ -197,28 +199,41 @@ def admin_only(func):
 # TODO: Use a decorator so only an admin user can create a new post
 @app.route("/new-order", methods=["GET", "POST"])
 def add_new_post():
-    form = TicketForm()
     session.pop('shopping_form_data', None)
-    if form.ticket.data > 2:
-        flash("門票一人限購兩張")
-    if form.email.data is None or form.name.data is None or form.phone.data is None:
-        flash("訂購人姓名、電話及email為必填資訊")
-    if form.validate_on_submit():
-        if form.school.data:
-            cost = form.ticket.data * 350
-        else:
-            cost = form.ticket.data * 500
-        session['ticket_form_data'] = {
-            'name': form.name.data,
-            'ticket': form.ticket.data,
-            'phone': form.phone.data,
-            'school': form.school.data,
-            'email': form.email.data,
-            'ticket_cost': cost
-        }
-        if form.submit.data:
-            return redirect(url_for("check_order"))
-        elif form.shopping.data:
+    if ticket_open:
+        form = TicketForm()
+        if form.ticket.data > 2:
+            flash("門票一人限購兩張")
+        if form.email.data is None or form.name.data is None or form.phone.data is None:
+            flash("訂購人姓名、電話及email為必填資訊")
+        if form.validate_on_submit():
+            if form.school.data:
+                cost = form.ticket.data * 350
+            else:
+                cost = form.ticket.data * 500
+            session['ticket_form_data'] = {
+                'name': form.name.data,
+                'ticket': form.ticket.data,
+                'phone': form.phone.data,
+                'school': form.school.data,
+                'email': form.email.data,
+                'ticket_cost': cost
+            }
+            if form.submit.data:
+                return redirect(url_for("check_order"))
+            elif form.shopping.data:
+                return redirect(url_for("shopping"))
+    else:
+        form = InfoForm()
+        if form.validate_on_submit():
+            session['ticket_form_data'] = {
+                'name': form.name.data,
+                'ticket': None,
+                'phone': form.phone.data,
+                'school': None,
+                'email': form.email.data,
+                'ticket_cost': 0
+            }
             return redirect(url_for("shopping"))
     return render_template("ticket.html", form=form)
 
@@ -264,7 +279,9 @@ def shopping():
             'shopping_cost': cost
         }
         return redirect(url_for("check_order"))
-    return render_template("shopping.html", form=shopping_form)
+    return render_template("shopping.html",
+                           form=shopping_form,
+                           ticket_open=ticket_open)
 
 
 # 查詢訂單功能
@@ -393,4 +410,4 @@ def contact():
 
 
 if __name__ == "__main__":
-    app.run(debug=False, port=5002)
+    app.run(debug=True, port=5002)

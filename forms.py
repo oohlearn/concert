@@ -16,6 +16,13 @@ class TicketForm(FlaskForm):
     shopping = SubmitField("訂購紀念品")
 
 
+class InfoForm(FlaskForm):
+    name = StringField("訂購者姓名（必填）", validators=[DataRequired()])
+    phone = StringField("連絡電話（必填）", validators=[DataRequired()])
+    email = StringField("Email（必填）", validators=[DataRequired()])
+    shopping = SubmitField("訂購紀念品")
+
+
 class ShoppingForm(FlaskForm):
     bag = IntegerField("帆布包（售價：300元/個）", default=0, validators=[NumberRange(min=0)])
     folder = IntegerField("譜夾（售價：130元/個）", default=0, validators=[NumberRange(min=0)])

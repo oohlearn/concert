@@ -29,9 +29,9 @@ messages %}
       <h3>您的訂單資料如下，請確認以下內容是否正確</h3>
       <p>訂購者資訊</p>
       <ul>
-        {%for key, value in order_info.items() %}
+        {%for key, value in order_info.items() %} {% if value != None %}
         <li>{{key}}：{{value}}</li>
-        {%endfor%}
+        {%endif%}{%endfor%}
       </ul>
       <p>商品明細</p>
       <ol>
@@ -45,8 +45,8 @@ messages %}
       <br />
       <p>
         商品價格<br />
-        音樂會門票：原價500元/張，團內購票350/張<br />
-        帆布包：300元/個<br />
+        {% if ticket_open%} 音樂會門票：原價500元/張，團內購票350/張<br />
+        {%endif%} 帆布包：300元/個<br />
         譜夾：130元/個<br />
         團T：200元/件
       </p>
