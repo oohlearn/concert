@@ -42,7 +42,7 @@ app.config['SQLALCHEMY_DATABASE_URI'] =os.environ.get("SQLALCHEMY_DATABASE_URI")
 
 db = SQLAlchemy(model_class=Base)
 db.init_app(app)
-ticket_open = False
+ticket_open = True
 
 # CONFIGURE TABLES
 class Order(db.Model):
@@ -327,6 +327,8 @@ def check_order():
             total_cost=cost)
     if session['ticket_form_data']['school']:
         discount = "是"
+    elif not ticket_open:
+        discount = None
     else:
         discount = "否"
     order_info = {
