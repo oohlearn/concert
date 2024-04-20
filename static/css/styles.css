@@ -11207,3 +11207,7 @@ header.masthead .post-heading .meta a {
   overflow: auto;
   justify-content: center;
 }
+
+.note {
+  color: var(--bs-blue);
+}

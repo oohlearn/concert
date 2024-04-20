@@ -33,9 +33,12 @@
         <p>{% endfor %} {%endif%} {%endwith%}</p>
         <h3>下單注意事項：</h3>
         <ul>
-          <li>送出訂單後請在下個頁面確認訂單明細及總金額</li>
-          <li>
+          <li class="note">送出訂單後請在下個頁面確認訂單明細及總金額</li>
+          <li class="note">
             同一訂購者只能下一筆訂單，若有需要加單，請加數字，如「李小明2」
+          </li>
+          <li class="note">
+            付款方式只開放『匯款』，若需要以其他方式付款，請聯絡小佳老師
           </li>
         </ul>
         {{ ckeditor.load() }} {{ ckeditor.config(name='body') }}

@@ -48,12 +48,13 @@ ticket_open = True
 class Order(db.Model):
     __tablename__ = "order"
     id: Mapped[int] = mapped_column(Integer, primary_key=True)
+    date: Mapped[str] = mapped_column(String(250), nullable=False)
     name: Mapped[str] = mapped_column(String(250), unique=True)
     phone: Mapped[str] = mapped_column(String(250))
-    date: Mapped[str] = mapped_column(String(250), nullable=False)
-    ticket: Mapped[int] = mapped_column(Integer, nullable=True)
     email: Mapped[str] = mapped_column(Text, nullable=False)
+    bank_account: Mapped[str] = mapped_column(Integer, nullable=True)
     school: Mapped[bool] = mapped_column(Boolean, default=False)
+    ticket: Mapped[int] = mapped_column(Integer, nullable=True)
     bag: Mapped[int] = mapped_column(Integer, nullable=True)
     folder: Mapped[int] = mapped_column(Integer, nullable=True)
     cloth_a_s: Mapped[int] = mapped_column(Integer, nullable=True)
@@ -216,7 +217,8 @@ def add_new_post():
                 'phone': form.phone.data,
                 'school': form.school.data,
                 'email': form.email.data,
-                'ticket_cost': cost
+                'ticket_cost': cost,
+                "bank_account": form.bank_account.data
             }
             if form.submit.data:
                 return redirect(url_for("check_order"))
@@ -231,7 +233,8 @@ def add_new_post():
                 'phone': form.phone.data,
                 'school': None,
                 'email': form.email.data,
-                'ticket_cost': 0
+                'ticket_cost': 0,
+                "bank_account": form.bank_account.data
             }
             return redirect(url_for("shopping"))
     return render_template("ticket.html", form=form)
@@ -296,6 +299,7 @@ def check_order():
             ticket=session['ticket_form_data']['ticket'],
             date=date.today().strftime("%B %d, %Y"),
             phone=session['ticket_form_data']['phone'],
+            bank_account=session["ticket_form_data"]["bank_account"],
             school=session['ticket_form_data']['school'],
             email=session['ticket_form_data']['email'],
             bag=session['shopping_form_data']['bag'],
@@ -324,6 +328,7 @@ def check_order():
             phone=session['ticket_form_data']["phone"],
             school=session['ticket_form_data']['school'],
             email=session['ticket_form_data']['email'],
+            bank_account=session["ticket_form_data"]["bank_account"],
             total_cost=cost)
     if session['ticket_form_data']['school']:
         discount = "是"
@@ -336,6 +341,7 @@ def check_order():
             "電話": new_order.phone,
             "email": new_order.email,
             "團內購票優惠身分": discount,
+            "匯款帳號末五碼": new_order.bank_account
     }
     order_list = {
             "音樂會門票": new_order.ticket,
