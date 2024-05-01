@@ -13,11 +13,15 @@ from typing import List
 # Import your forms from the forms.py
 from forms import (TicketForm, RegisterForm, LoginForm, 
 CommentForm, ShoppingForm, CheckForm, InfoForm)
+import smtplib
+from email.mime.text import MIMEText
 
 from config import Config
+from jinja2 import Template
 
 
 import os
+
 
 
 app = Flask(__name__)
@@ -363,10 +367,48 @@ def check_order():
             "團T：小孩 - 4XL 號（身高150公分）":new_order.cloth_c_4xl
         }
     if form.validate_on_submit():
-
+        mail_content = """
+        <h3>您的訂單資料如下，請確認以下內容是否正確，若有問題請洽小佳老師</h3>
+      <p>訂購者資訊</p>
+      <ul>
+        {%for key, value in order_info.items() %} {% if value != None %}
+        <li>{{key}}：{{value}}</li>
+        {%endif%}{%endfor%}
+      </ul>
+      <p>商品明細</p>
+      <ol>
+        {%for key, value in order_list.items() %} {% if value != None and value
+        != 0 %}
+        <li>{{key}}：{{value}}</li>
+        {%endif%} {%endfor%}
+      </ol>
+      <h3 style="color: brown">總金額：{{cost}}</h3>
+      <hr>
+      <p>匯款資料</p>
+      <ul>
+      <li>帳號：郵局(700) 0002661 0374550</li>
+      <li>戶名：臺北市南港區成德國民小學國樂團家長後援會游修靜</li>
+      </ul>
+        """
+        
+        template = Template(mail_content)
+        mail_content = template.render(order_info=order_info, order_list=order_list, cost=cost)
+        sender = "testc1386@gmail.com"
+        receiver = order_info["email"]
+        my_email = "testc1386@gmail.com"
+        password = os.environ.get("PASSWORD")
+        mime = MIMEText(mail_content, "html", "utf-8")
+        mime["Subject"] = "成德國小十周年音樂會門票及紀念品訂單明細"
+        msg = mime.as_string()
+        with smtplib.SMTP_SSL("smtp.gmail.com", 465) as connection:
+            connection.login(user=my_email, password=password)
+            connection.sendmail(sender,
+                                receiver,
+                                msg)
         db.session.add(new_order)
         db.session.commit()
-        flash("訂單已送出，若有問題，請聯絡小佳老師")
+        flash("訂單已送出，明細已寄送至填寫的信箱（也請檢查垃圾郵件）")
+        flash("若有問題，請聯絡小佳老師")
         session.pop('ticket_form_data', None)
         session.pop('shopping_form_data', None)
         return redirect(url_for("home"))

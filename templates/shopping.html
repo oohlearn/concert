@@ -1,11 +1,7 @@
-{% from "bootstrap5/form.html" import render_form %} {% block content %} {%
-include "header.html" %}
+{% from "bootstrap5/form.html" import render_form %} {% block content %} {% include "header.html" %}
 
 <!-- Page Header -->
-<header
-  class="masthead"
-  style="background-image: url('../static/assets/img/edit-bg.jpg')"
->
+<header class="masthead" style="background-image: url('../static/assets/img/edit-bg.jpg')">
   <div class="container position-relative px-4 px-lg-5">
     <div class="row gx-4 gx-lg-5 justify-content-center">
       <div class="col-md-10 col-lg-8 col-xl-7">
@@ -33,16 +29,8 @@ include "header.html" %}
         <br />
         <div class="img_container">
           <h5>帆布包&nbsp;&nbsp;&nbsp;售價：300元/個</h5>
-          <img
-            class="item_img"
-            src="/static/assets/mockup-帆布-正面_0.png"
-            alt="帆布包正面"
-          />
-          <img
-            class="item_img"
-            src="/static/assets/mockup-帆布-背面-2_0.png"
-            alt="帆布包背面"
-          />
+          <img class="item_img" src="/static/assets/mockup-帆布-正面_0.png" alt="帆布包正面" />
+          <img class="item_img" src="/static/assets/mockup-帆布-背面-2_0.png" alt="帆布包背面" />
         </div>
         <br />
         <div class="img_container">
@@ -52,22 +40,13 @@ include "header.html" %}
         </div>
         <br />
         <div class="img_container">
-          <h5>團T&nbsp;&nbsp;&nbsp;售價：200元/個</h5>
-          <img
-            class="item_img"
-            src="/static/assets/團T正面.png"
-            alt="團T正面"
-          />
-          <img
-            class="item_img"
-            src="/static/assets/團T背面.png"
-            alt="團T背面"
-          />
+          <h5>團T&nbsp;&nbsp;&nbsp;售價：200元/件</h5>
+          <img class="item_img" src="/static/assets/團T正面.png" alt="團T正面" />
+          <img class="item_img" src="/static/assets/團T背面.png" alt="團T背面" />
         </div>
         <hr />
         <br />
-        {{ ckeditor.load() }} {{ ckeditor.config(name='body') }} {{
-        render_form(form, novalidate=True, button_map={"submit": "primary"}) }}
+        {{ ckeditor.load() }} {{ ckeditor.config(name='body') }} {{ render_form(form, novalidate=True, button_map={"submit": "primary"}) }}
       </div>
     </div>
   </div>

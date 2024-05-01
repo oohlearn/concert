@@ -8,8 +8,8 @@ from flask_ckeditor import CKEditorField
 class TicketForm(FlaskForm):
     name = StringField("訂購者姓名（必填）", validators=[DataRequired()])
     phone = StringField("連絡電話（必填）", validators=[DataRequired()])
-    email = StringField("Email（必填）", validators=[DataRequired()])
-    bank_account = StringField("匯款帳號末五碼（若無法匯款，請連絡小佳老師）")
+    email = StringField("Email（必填，訂單送出後會寄送訂單明細）", validators=[DataRequired()])
+    bank_account = StringField("匯款帳號末五碼")
     ticket = IntegerField("欲購買票數（定價：500元/張，每人限購兩張）",
                           default=0, validators=[NumberRange(min=0, max=2)])
     school = BooleanField("是否為團內購票（團內購票享有原價7折優惠，350元/張）")
