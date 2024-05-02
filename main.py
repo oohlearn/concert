@@ -1,4 +1,4 @@
-from datetime import date
+from datetime import date, datetime
 from flask import Flask, abort, render_template, redirect, url_for, flash, request, session
 from flask_bootstrap import Bootstrap5
 from flask_ckeditor import CKEditor
@@ -56,7 +56,8 @@ class Order(db.Model):
     name: Mapped[str] = mapped_column(String(250), unique=True)
     phone: Mapped[str] = mapped_column(String(250))
     email: Mapped[str] = mapped_column(Text, nullable=False)
-    bank_account: Mapped[str] = mapped_column(Integer, nullable=True)
+    bank_account: Mapped[str] = mapped_column(Integer, nullable=False)
+    paid_date: Mapped[str] = mapped_column(String(250), nullable=False)
     school: Mapped[bool] = mapped_column(Boolean, default=False)
     ticket: Mapped[int] = mapped_column(Integer, nullable=True)
     bag: Mapped[int] = mapped_column(Integer, nullable=True)
@@ -222,7 +223,8 @@ def add_new_post():
                 'school': form.school.data,
                 'email': form.email.data,
                 'ticket_cost': cost,
-                "bank_account": form.bank_account.data
+                "bank_account": form.bank_account.data,
+                "paid_date": form.paid_date.data.strftime('%Y/%m/%d')
             }
             if form.submit.data:
                 return redirect(url_for("check_order"))
@@ -238,7 +240,8 @@ def add_new_post():
                 'school': None,
                 'email': form.email.data,
                 'ticket_cost': 0,
-                "bank_account": form.bank_account.data
+                "bank_account": form.bank_account.data,
+                "paid_date": form.paid_date.data.strftime('%Y/%m/%d')
             }
             return redirect(url_for("shopping"))
     return render_template("ticket.html", form=form)
@@ -304,6 +307,7 @@ def check_order():
             date=date.today().strftime("%B %d, %Y"),
             phone=session['ticket_form_data']['phone'],
             bank_account=session["ticket_form_data"]["bank_account"],
+            paid_date=session["ticket_form_data"]["paid_date"],
             school=session['ticket_form_data']['school'],
             email=session['ticket_form_data']['email'],
             bag=session['shopping_form_data']['bag'],
@@ -333,6 +337,7 @@ def check_order():
             school=session['ticket_form_data']['school'],
             email=session['ticket_form_data']['email'],
             bank_account=session["ticket_form_data"]["bank_account"],
+            paid_date=session["ticket_form_data"]["paid_date"],
             total_cost=cost)
     if session['ticket_form_data']['school']:
         discount = "是"
@@ -345,7 +350,8 @@ def check_order():
             "電話": new_order.phone,
             "email": new_order.email,
             "團內購票優惠身分": discount,
-            "匯款帳號末五碼": new_order.bank_account
+            "匯款帳號末五碼": new_order.bank_account,
+            "匯款日期": new_order.paid_date,
     }
     order_list = {
             "音樂會門票": new_order.ticket,
@@ -368,7 +374,8 @@ def check_order():
         }
     if form.validate_on_submit():
         mail_content = """
-        <h3>您的訂單資料如下，請確認以下內容是否正確，若有問題請洽小佳老師</h3>
+        <h3>您的訂單資料如下，請確認以下內容是否正確，並於訂購當日匯款</h3>
+        <h3>若有問題請洽小佳老師</h3>
       <p>訂購者資訊</p>
       <ul>
         {%for key, value in order_info.items() %} {% if value != None %}
@@ -407,11 +414,11 @@ def check_order():
                                 msg)
         db.session.add(new_order)
         db.session.commit()
-        flash("訂單已送出，明細已寄送至填寫的信箱（也請檢查垃圾郵件）")
+        flash("訂單已送出，明細已寄送至填寫的信箱（請檢查垃圾郵件）")
         flash("若有問題，請聯絡小佳老師")
         session.pop('ticket_form_data', None)
         session.pop('shopping_form_data', None)
-        return redirect(url_for("home"))
+        return redirect(url_for("home"))                                                                                          
     return render_template("check.html", form=form, session=session, cost=cost, order_list=order_list, order_info=order_info)
 
 
