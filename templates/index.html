@@ -1,10 +1,7 @@
 {% include "header.html" %}
 
 <!-- Page Header-->
-<header
-  class="masthead"
-  style="background-image: url('../static/assets/img/home-bg.jpg')"
->
+<header class="masthead" style="background-image: url('../static/assets/img/home.jpg')">
   <div class="container position-relative px-4 px-lg-5">
     <div class="row gx-4 gx-lg-5 justify-content-center">
       <div class="col-md-10 col-lg-8 col-xl-7">
@@ -17,8 +14,7 @@
   </div>
 </header>
 <!-- Main Content-->
-{% with messages = get_flashed_messages() %} {% if messages %} {%for message in
-messages %}
+{% with messages = get_flashed_messages() %} {% if messages %} {%for message in messages %}
 <p class="flash">{{ message }}</p>
 <p>{% endfor %} {%endif%} {%endwith%}</p>
 
@@ -32,11 +28,7 @@ messages %}
       <h3>臺北市南港區成德國民小學國樂團家長後援會游修靜</h3>
       <!-- TODO: Only show Create Post button if user id is 1 (admin user) -->
       <div class="d-flex justify-content-end mb-4">
-        <a
-          class="btn btn-primary float-right"
-          href="{{url_for('add_new_post')}}"
-          >由此下單</a
-        >
+        <a class="btn btn-primary float-right" href="{{url_for('add_new_post')}}">由此下單</a>
       </div>
       {% if user_id == 1 :%}
       <!-- Post preview-->
