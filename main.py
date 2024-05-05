@@ -426,7 +426,8 @@ def check_order():
         db.session.commit()
         flash("訂單已送出，明細已寄送至填寫的信箱（請檢查垃圾郵件）")
         flash("若有問題，請聯絡小佳老師")
-        ticket_count += new_order.ticket
+        if ticket_open:
+            ticket_count += new_order.ticket
         if ticket_count >= ticket_limit:
             ticket_open = False
         session.pop('ticket_form_data', None)
