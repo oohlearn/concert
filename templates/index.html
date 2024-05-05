@@ -26,10 +26,10 @@
       <h3>郵局(700) 0002661 0374550</h3>
       <h5>戶名：</h5>
       <h3>臺北市南港區成德國民小學國樂團家長後援會游修靜</h3>
+      <h5 style="color: white">{{ticket_count}}</h5>
       <!-- TODO: Only show Create Post button if user id is 1 (admin user) -->
       <div class="d-flex justify-content-end mb-4">
         <a class="btn btn-primary float-right" href="{{url_for('add_new_post')}}">由此下單</a>
-        <h3>{{ticket_count}}</h3>
       </div>
       {% if user_id == 1 :%}
       <!-- Post preview-->
