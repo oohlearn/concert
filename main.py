@@ -23,6 +23,9 @@ from jinja2 import Template
 import os
 
 
+ticket_count = 0
+ticket_limit = int(os.environ.get("TICKET_LIMIT"))
+
 
 app = Flask(__name__)
 app.config.from_object(Config)
@@ -159,6 +162,7 @@ def home():
     result = db.session.execute(db.select(Order))
     posts = result.scalars().all()
     return render_template("index.html", all_posts=posts,
+                           ticket_count=ticket_count,
                            logged_in=current_user.is_authenticated,
                            user_id=current_user.id if current_user.is_authenticated else None)
 
@@ -232,6 +236,8 @@ def add_new_post():
                 return redirect(url_for("shopping"))
     else:
         form = InfoForm()
+        if ticket_count >= ticket_limit:
+            flash("限量是殘酷的，門票已停止販售囉～")
         if form.validate_on_submit():
             session['ticket_form_data'] = {
                 'name': form.name.data,
@@ -293,9 +299,13 @@ def shopping():
                            ticket_open=ticket_open)
 
 
+
 # 查詢訂單功能
 @app.route("/check_order", methods=["GET", "POST"])
 def check_order():
+    global ticket_count
+    global ticket_open
+    global ticket_limit
     form = CheckForm()
     order_info = {}
     order_list = {}
@@ -416,10 +426,16 @@ def check_order():
         db.session.commit()
         flash("訂單已送出，明細已寄送至填寫的信箱（請檢查垃圾郵件）")
         flash("若有問題，請聯絡小佳老師")
+        ticket_count += new_order.ticket
+        if ticket_count >= ticket_limit:
+            ticket_open = False
         session.pop('ticket_form_data', None)
         session.pop('shopping_form_data', None)
-        return redirect(url_for("home"))                                                                                          
-    return render_template("check.html", form=form, session=session, cost=cost, order_list=order_list, order_info=order_info)
+        return redirect(url_for("home"))
+    return render_template("check.html", form=form, session=session,
+                           cost=cost, order_list=order_list,
+                           order_info=order_info,
+                           )
 
 
 # TODO: Use a decorator so only an admin user can edit a post
