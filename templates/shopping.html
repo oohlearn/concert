@@ -49,7 +49,7 @@
         <div class="img_container">
           <h5>
             紀念品實體參考照
-            <a href="https://drive.google.com/drive/folders/1qIRQowQw9owor28UL--C5Wx_xpwDM2VR?usp=drive_link" target="_blank"> &nbsp;&nbsp;（更多照片請點此）</a>
+            <a class="pic_link" href="https://drive.google.com/drive/folders/1qIRQowQw9owor28UL--C5Wx_xpwDM2VR?usp=drive_link" target="_blank"> &nbsp;&nbsp;（更多照片請點此）</a>
           </h5>
           <img class="item_img" src="/static/assets/實體照2.jpg" alt="實體照2" />
           <img class="item_img" src="/static/assets/實體照4.jpg" alt="實體照4" />
@@ -62,11 +62,11 @@
         <br />
         <br />
         <h5>團T試穿報告參考</h5>
-        <img src="/static/assets/兒童版(校正).png" alt="兒童版試穿報告" />
+        <img class="item_report" src="/static/assets/兒童版(校正).png" alt="兒童版試穿報告" />
         <br />
         <br />
 
-        <img src="/static/assets/大人版(校正).png" alt="大人版試穿報告" />
+        <img class="item_report" src="/static/assets/大人版(校正).png" alt="大人版試穿報告" />
         <hr />
         <br />
         {{ ckeditor.load() }} {{ ckeditor.config(name='body') }} {{ render_form(form, novalidate=True, button_map={"submit": "primary"}) }}
