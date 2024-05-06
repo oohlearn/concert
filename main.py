@@ -65,6 +65,7 @@ class Order(db.Model):
     ticket: Mapped[int] = mapped_column(Integer, nullable=True)
     bag: Mapped[int] = mapped_column(Integer, nullable=True)
     folder: Mapped[int] = mapped_column(Integer, nullable=True)
+    cloth_a_xs: Mapped[int] = mapped_column(Integer, nullable=True)
     cloth_a_s: Mapped[int] = mapped_column(Integer, nullable=True)
     cloth_a_m: Mapped[int] = mapped_column(Integer, nullable=True)
     cloth_a_l: Mapped[int] = mapped_column(Integer, nullable=True)
@@ -72,13 +73,12 @@ class Order(db.Model):
     cloth_a_xxl: Mapped[int] = mapped_column(Integer, nullable=True)
     cloth_a_3xl: Mapped[int] = mapped_column(Integer, nullable=True)
     cloth_a_4xl: Mapped[int] = mapped_column(Integer, nullable=True)
-    cloth_c_s: Mapped[int] = mapped_column(Integer, nullable=True)
-    cloth_c_m: Mapped[int] = mapped_column(Integer, nullable=True)
-    cloth_c_l: Mapped[int] = mapped_column(Integer, nullable=True)
-    cloth_c_xl: Mapped[int] = mapped_column(Integer, nullable=True)
-    cloth_c_xxl: Mapped[int] = mapped_column(Integer, nullable=True)
-    cloth_c_3xl: Mapped[int] = mapped_column(Integer, nullable=True)
-    cloth_c_4xl: Mapped[int] = mapped_column(Integer, nullable=True)
+    cloth_a_6xl: Mapped[int] = mapped_column(Integer, nullable=True)
+
+    cloth_c_110: Mapped[int] = mapped_column(Integer, nullable=True)
+    cloth_c_120: Mapped[int] = mapped_column(Integer, nullable=True)
+    cloth_c_130: Mapped[int] = mapped_column(Integer, nullable=True)
+    cloth_c_140: Mapped[int] = mapped_column(Integer, nullable=True)
     total_cost: Mapped[int] = mapped_column(Integer, nullable=True)
     author_id = mapped_column(Integer, db.ForeignKey("users.id"))
     author = relationship("User", back_populates="posts")
@@ -259,6 +259,7 @@ def shopping():
     session.pop('shopping_form_data', None)
     if shopping_form.validate_on_submit():
         cost = (shopping_form.bag.data*300 + shopping_form.folder.data*130
+                + shopping_form.cloth_a_xs.data*200
                 + shopping_form.cloth_a_s.data*200
                 + shopping_form.cloth_a_m.data*200
                 + shopping_form.cloth_a_l.data*200
@@ -266,17 +267,16 @@ def shopping():
                 + shopping_form.cloth_a_xxl.data*200
                 + shopping_form.cloth_a_3xl.data*200
                 + shopping_form.cloth_a_4xl.data*200
-                + shopping_form.cloth_c_s.data*200
-                + shopping_form.cloth_c_m.data*200
-                + shopping_form.cloth_c_l.data*200
-                + shopping_form.cloth_c_xl.data*200
-                + shopping_form.cloth_c_xxl.data*200
-                + shopping_form.cloth_c_3xl.data*200
-                + shopping_form.cloth_c_4xl.data*200
+                + shopping_form.cloth_a_6xl.data*200
+                + shopping_form.cloth_c_110.data*200
+                + shopping_form.cloth_c_120.data*200
+                + shopping_form.cloth_c_130.data*200
+                + shopping_form.cloth_c_140.data*200
                 )
         session['shopping_form_data'] = {
             'bag': shopping_form.bag.data,
             'folder': shopping_form.folder.data,
+            "cloth_a_xs": shopping_form.cloth_a_xs.data,
             "cloth_a_s": shopping_form.cloth_a_s.data,
             "cloth_a_m": shopping_form.cloth_a_m.data,
             "cloth_a_l": shopping_form.cloth_a_l.data,
@@ -284,13 +284,12 @@ def shopping():
             "cloth_a_xxl": shopping_form.cloth_a_xxl.data,
             "cloth_a_3xl": shopping_form.cloth_a_3xl.data,
             "cloth_a_4xl": shopping_form.cloth_a_4xl.data,
-            "cloth_c_s": shopping_form.cloth_c_s.data,
-            "cloth_c_m": shopping_form.cloth_c_m.data,
-            "cloth_c_l": shopping_form.cloth_c_l.data,
-            "cloth_c_xl": shopping_form.cloth_c_xl.data,
-            "cloth_c_xxl": shopping_form.cloth_c_xxl.data,
-            "cloth_c_3xl": shopping_form.cloth_c_3xl.data,
-            "cloth_c_4xl": shopping_form.cloth_c_4xl.data,
+            "cloth_a_6xl": shopping_form.cloth_a_6xl.data,
+
+            "cloth_c_110": shopping_form.cloth_c_110.data,
+            "cloth_c_120": shopping_form.cloth_c_120.data,
+            "cloth_c_130": shopping_form.cloth_c_130.data,
+            "cloth_c_140": shopping_form.cloth_c_140.data,
             'shopping_cost': cost
         }
         return redirect(url_for("check_order"))
@@ -322,6 +321,7 @@ def check_order():
             email=session['ticket_form_data']['email'],
             bag=session['shopping_form_data']['bag'],
             folder=session['shopping_form_data']['folder'],
+            cloth_a_xs=session["shopping_form_data"]["cloth_a_xs"],
             cloth_a_s=session["shopping_form_data"]["cloth_a_s"],
             cloth_a_m=session["shopping_form_data"]["cloth_a_m"],
             cloth_a_l=session["shopping_form_data"]["cloth_a_l"],
@@ -329,13 +329,12 @@ def check_order():
             cloth_a_xxl=session["shopping_form_data"]["cloth_a_xxl"],
             cloth_a_3xl=session["shopping_form_data"]["cloth_a_3xl"],
             cloth_a_4xl=session["shopping_form_data"]["cloth_a_4xl"],
-            cloth_c_s=session["shopping_form_data"]["cloth_c_s"],
-            cloth_c_m=session["shopping_form_data"]["cloth_c_m"],
-            cloth_c_l=session["shopping_form_data"]["cloth_c_l"],
-            cloth_c_xl=session["shopping_form_data"]["cloth_c_xl"],
-            cloth_c_xxl=session["shopping_form_data"]["cloth_c_xxl"],
-            cloth_c_3xl=session["shopping_form_data"]["cloth_c_3xl"],
-            cloth_c_4xl=session["shopping_form_data"]["cloth_c_4xl"],
+            cloth_a_6xl=session["shopping_form_data"]["cloth_a_6xl"],
+
+            cloth_c_110=session["shopping_form_data"]["cloth_c_110"],
+            cloth_c_120=session["shopping_form_data"]["cloth_c_120"],
+            cloth_c_130=session["shopping_form_data"]["cloth_c_130"],
+            cloth_c_140=session["shopping_form_data"]["cloth_c_140"],
             total_cost=cost)
     else:
         cost = session['ticket_form_data']["ticket_cost"]
@@ -367,20 +366,20 @@ def check_order():
             "音樂會門票": new_order.ticket,
             "帆布包": new_order.bag,
             "譜夾": new_order.folder,
-            "團T：大人 - S 號（身高155公分）":new_order.cloth_a_s,
-            "團T：大人 - M 號（身高160公分）":new_order.cloth_a_m,
-            "團T：大人 - L 號（身高165公分）":new_order.cloth_a_l,
-            "團T：大人 - XL 號（身高170公分）":new_order.cloth_a_xl,
-            "團T：大人 - XXL 號（身高175公分）":new_order.cloth_a_xxl,
-            "團T：大人 - 3XL 號（身高180公分）":new_order.cloth_a_3xl,
-            "團T：大人 - 4XL 號（身高185公分）":new_order.cloth_a_4xl,
-            "團T：小孩 - s 號（身高90公分）":new_order.cloth_c_s,
-            "團T：小孩 - m 號（身高100公分）":new_order.cloth_c_m,
-            "團T：小孩 - L 號（身高110公分）":new_order.cloth_c_l,
-            "團T：小孩 - XL 號（身高120公分）":new_order.cloth_c_xl,
-            "團T：小孩 - XXL 號（身高130公分）":new_order.cloth_c_xxl,
-            "團T：小孩 - 3XL 號（身高140公分）":new_order.cloth_c_3xl,
-            "團T：小孩 - 4XL 號（身高150公分）":new_order.cloth_c_4xl
+            "團T：大人 - XS 號":new_order.cloth_a_xs,
+            "團T：大人 - S 號":new_order.cloth_a_s,
+            "團T：大人 - M 號":new_order.cloth_a_m,
+            "團T：大人 - L 號":new_order.cloth_a_l,
+            "團T：大人 - XL 號":new_order.cloth_a_xl,
+            "團T：大人 - XXL 號":new_order.cloth_a_xxl,
+            "團T：大人 - 3XL 號":new_order.cloth_a_3xl,
+            "團T：大人 - 4XL 號":new_order.cloth_a_4xl,
+            "團T：大人 - 6XL 號":new_order.cloth_a_6xl,
+
+            "團T：小孩 - 身高110公分":new_order.cloth_c_110,
+            "團T：小孩 - 身高120公分":new_order.cloth_c_120,
+            "團T：小孩 - 身高130公分":new_order.cloth_c_130,
+            "團T：小孩 - 身高140公分":new_order.cloth_c_140,
         }
     if form.validate_on_submit():
         mail_content = """
@@ -483,4 +482,4 @@ def contact():
 
 
 if __name__ == "__main__":
-    app.run(debug=True, port=5002)
+    app.run(debug=False, port=5002)
