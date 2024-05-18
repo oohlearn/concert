@@ -1,7 +1,6 @@
 from flask_wtf import FlaskForm
-from wtforms import StringField, SubmitField, PasswordField, BooleanField, IntegerField, DateField
-from wtforms.validators import DataRequired, URL, NumberRange
-from flask_ckeditor import CKEditorField
+from wtforms import StringField, SubmitField, BooleanField, IntegerField, DateField
+from wtforms.validators import DataRequired, NumberRange
 
 
 # WTForm for creating a blog post
@@ -47,35 +46,6 @@ class ShoppingForm(FlaskForm):
     submit = SubmitField("送出訂單")
 
 
-class ClothAdultForm(FlaskForm):
-    cloth_a_s = IntegerField("大人-S（身高155公分）", default=0)
-    
-class ClothChildren(FlaskForm):
-    cloth_a_s = IntegerField("大人-S（身高155公分）", default=0)
-
-    
-
-
 
 class CheckForm(FlaskForm):
     submit_btn = SubmitField("確認訂單")
-
-# TODO: Create a RegisterForm to register new users
-class RegisterForm(FlaskForm):
-    email = StringField("Email", validators=[DataRequired()])
-    password = PasswordField("Password", validators=[DataRequired()])
-    name = StringField("name", validators=[DataRequired()])
-    submit_btn = SubmitField("SIGN ME UP!")
-
-
-# TODO: Create a LoginForm to login existing users
-class LoginForm(FlaskForm):
-    email = StringField("Email", validators=[DataRequired()])
-    password = PasswordField("Password", validators=[DataRequired()])
-    submit_btn = SubmitField("LET ME IN!")
-
-
-# TODO: Create a CommentForm so users can leave comments below posts
-class CommentForm(FlaskForm):
-    comment = CKEditorField("Comment")
-    submit_btn = SubmitField("Send Comment")

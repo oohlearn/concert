@@ -6,13 +6,10 @@ from flask_ckeditor import CKEditor
 from flask_login import UserMixin, login_user, LoginManager, current_user, logout_user, login_required
 from flask_sqlalchemy import SQLAlchemy
 from sqlalchemy.orm import relationship, DeclarativeBase, Mapped, mapped_column
-from sqlalchemy import Integer, String, Text, ForeignKey, Boolean
-from functools import wraps
+from sqlalchemy import Integer, String, Text, Boolean
 from werkzeug.security import generate_password_hash, check_password_hash
-from typing import List
 # Import your forms from the forms.py
-from forms import (TicketForm, RegisterForm, LoginForm, 
-CommentForm, ShoppingForm, CheckForm, InfoForm)
+from forms import (TicketForm, ShoppingForm, CheckForm, InfoForm)
 import smtplib
 from email.mime.text import MIMEText
 
@@ -37,6 +34,8 @@ Bootstrap5(app)
 # TODO: Configure Flask-Login
 login_manager = LoginManager()
 login_manager.init_app(app)
+
+
 @login_manager.user_loader
 def load_user(user_id):
     return User.query.get(user_id)
@@ -45,11 +44,15 @@ def load_user(user_id):
 # CREATE DATABASE
 class Base(DeclarativeBase):
     pass
-app.config['SQLALCHEMY_DATABASE_URI'] =os.environ.get("SQLALCHEMY_DATABASE_URI")
+
+
+app.config['SQLALCHEMY_DATABASE_URI'] = os.environ.get(
+    "SQLALCHEMY_DATABASE_URI")
 
 db = SQLAlchemy(model_class=Base)
 db.init_app(app)
 ticket_open = True
+
 
 # CONFIGURE TABLES
 class Order(db.Model):
@@ -110,53 +113,6 @@ with app.app_context():
     db.create_all()
 
 
-# TODO: Use Werkzeug to hash the user's password when creating a new user.
-@app.route('/register', methods=["GET", "POST"])
-def register():
-    form = RegisterForm()
-    if form.validate_on_submit():
-        register_email = form.email.data
-        if User.query.filter_by(email=register_email) and not current_user:
-            flash("This email has been registered. Please logged in.")
-            return redirect(url_for("login"))
-        else:
-            pass_hash = generate_password_hash(form.password.data, method="pbkdf2", salt_length=8)
-            new_user = User(
-                email=register_email,
-                name=form.name.data,
-                password=pass_hash
-            )
-            db.session.add(new_user)
-            db.session.commit()
-            login_user(new_user)
-            return redirect(url_for("home"))
-    return render_template("register.html", form=form, logged_in=current_user.is_authenticated)
-
-
-# TODO: Retrieve a user from the database based on their  email. 
-@app.route('/login', methods=["GET", "POST"])
-def login():
-    form = LoginForm()
-    if form.validate_on_submit():
-        email = form.email.data
-        password = form.password.data
-        user = db.session.execute(db.select(User).where(User.email == email)).scalar()
-        if user and check_password_hash(user.password, password):
-            login_user(user)
-            return redirect(session.pop('original_page',  url_for("home")))
-        # 如果有儲存上一頁的紀錄，就會回到登入前的頁面，不然就回home
-        else:
-            flash("No match user or wrong password.")
-    return render_template("login.html", form=form, logged_in=current_user.is_authenticated)
-
-
-@app.route('/logout')
-def logout():
-    logout_user()
-    flash("Successfully logout")
-    return redirect(url_for('home'))
-
-
 @app.route('/')
 def home():
     result = db.session.execute(db.select(Order))
@@ -164,45 +120,8 @@ def home():
     return render_template("index.html", all_posts=posts,
                            ticket_count=ticket_count,
                            logged_in=current_user.is_authenticated,
-                           user_id=current_user.id if current_user.is_authenticated else None)
-
-
-# TODO: Allow logged-in users to comment on post
-@app.route("/post/<int:post_id>", methods=["GET", "POST"])
-def show_post(post_id):
-    form = CommentForm()
-    requested_post = db.get_or_404(Order, post_id)
-    if form.validate_on_submit():
-        if not current_user.is_authenticated:
-            session['original_page'] = request.referrer  #將原始訪問的頁面（即評論頁面）保存下來
-            flash("You have to login or register to comment.")
-            return redirect(url_for("login"))
-        new_comment = Comment(
-            text=form.comment.data,
-            author_id=current_user.id,
-            post_id=post_id,
-        )
-        db.session.add(new_comment)
-        db.session.commit()
-        return redirect(url_for("show_post", post_id=post_id))
-    result = db.session.execute(db.select(Comment))
-    comments = result.scalars().all()
-    return render_template("post.html",
-                           post=requested_post,
-                           form=form,
-                           all_comments=comments,
-                           logged_in=current_user.is_authenticated,)
-
-
-def admin_only(func):
-    @wraps(func)
-    def wrapper(*args, **kwargs):
-        if not current_user.is_authenticated:
-            return abort(401)
-        if current_user.id != 1:
-            return abort(403)
-        return func(*args, **kwargs)
-    return wrapper
+                           user_id=current_user.id
+                           if current_user.is_authenticated else None)
 
 
 # TODO: Use a decorator so only an admin user can create a new post
@@ -213,8 +132,10 @@ def add_new_post():
         form = TicketForm()
         if form.ticket.data > 2:
             flash("門票一人限購兩張")
-        if form.email.data is None or form.name.data is None or form.phone.data is None:
-            flash("訂購人姓名、電話及email為必填資訊")
+            return render_template("ticket.html", form=form)
+        if form.email.data is None or form.name.data is None or form.phone.data is None or form.bank_account.data is None or form.paid_date.data is None:
+            flash("訂購人姓名、電話、email、匯款帳號末五碼及匯款日期為必填資訊")
+            return render_template("ticket.html", form=form)
         if form.validate_on_submit():
             if form.school.data:
                 cost = form.ticket.data * 350
@@ -241,9 +162,9 @@ def add_new_post():
         if form.validate_on_submit():
             session['ticket_form_data'] = {
                 'name': form.name.data,
-                'ticket': None,
+                'ticket': 0,
                 'phone': form.phone.data,
-                'school': None,
+                'school': False,
                 'email': form.email.data,
                 'ticket_cost': 0,
                 "bank_account": form.bank_account.data,
@@ -298,7 +219,6 @@ def shopping():
                            ticket_open=ticket_open)
 
 
-
 # 查詢訂單功能
 @app.route("/check_order", methods=["GET", "POST"])
 def check_order():
@@ -309,7 +229,8 @@ def check_order():
     order_info = {}
     order_list = {}
     if "shopping_form_data" in session:
-        cost = session['shopping_form_data']["shopping_cost"] + session['ticket_form_data']["ticket_cost"]
+        cost = session['shopping_form_data']["shopping_cost"]
+        + session['ticket_form_data']["ticket_cost"]
         new_order = Order(
             name=session['ticket_form_data']['name'],
             ticket=session['ticket_form_data']['ticket'],
@@ -366,20 +287,20 @@ def check_order():
             "音樂會門票": new_order.ticket,
             "帆布包": new_order.bag,
             "譜夾": new_order.folder,
-            "團T：大人 - XS 號":new_order.cloth_a_xs,
-            "團T：大人 - S 號":new_order.cloth_a_s,
-            "團T：大人 - M 號":new_order.cloth_a_m,
-            "團T：大人 - L 號":new_order.cloth_a_l,
-            "團T：大人 - XL 號":new_order.cloth_a_xl,
-            "團T：大人 - XXL 號":new_order.cloth_a_xxl,
-            "團T：大人 - 3XL 號":new_order.cloth_a_3xl,
-            "團T：大人 - 4XL 號":new_order.cloth_a_4xl,
-            "團T：大人 - 6XL 號":new_order.cloth_a_6xl,
+            "團T：大人 - XS 號": new_order.cloth_a_xs,
+            "團T：大人 - S 號": new_order.cloth_a_s,
+            "團T：大人 - M 號": new_order.cloth_a_m,
+            "團T：大人 - L 號": new_order.cloth_a_l,
+            "團T：大人 - XL 號": new_order.cloth_a_xl,
+            "團T：大人 - XXL 號": new_order.cloth_a_xxl,
+            "團T：大人 - 3XL 號": new_order.cloth_a_3xl,
+            "團T：大人 - 4XL 號": new_order.cloth_a_4xl,
+            "團T：大人 - 6XL 號": new_order.cloth_a_6xl,
 
-            "團T：小孩 - 身高110公分":new_order.cloth_c_110,
-            "團T：小孩 - 身高120公分":new_order.cloth_c_120,
-            "團T：小孩 - 身高130公分":new_order.cloth_c_130,
-            "團T：小孩 - 身高140公分":new_order.cloth_c_140,
+            "團T：小孩 - 身高110公分": new_order.cloth_c_110,
+            "團T：小孩 - 身高120公分": new_order.cloth_c_120,
+            "團T：小孩 - 身高130公分": new_order.cloth_c_130,
+            "團T：小孩 - 身高140公分": new_order.cloth_c_140,
         }
     if form.validate_on_submit():
         mail_content = """
@@ -406,7 +327,6 @@ def check_order():
       <li>戶名：臺北市南港區成德國民小學國樂團家長後援會游修靜</li>
       </ul>
         """
-        
         template = Template(mail_content)
         mail_content = template.render(order_info=order_info, order_list=order_list, cost=cost)
         sender = "testc1386@gmail.com"
@@ -438,48 +358,5 @@ def check_order():
                            )
 
 
-# TODO: Use a decorator so only an admin user can edit a post
-@app.route("/edit-post/<int:post_id>", methods=["GET", "POST"])
-@admin_only
-def edit_post(post_id):
-    post = db.get_or_404(Order, post_id)
-    edit_form = TicketForm(
-        title=post.title,
-        subtitle=post.subtitle,
-        img_url=post.img_url,
-        author=post.author,
-        body=post.body
-    )
-    if edit_form.validate_on_submit():
-        post.title = edit_form.title.data
-        post.subtitle = edit_form.subtitle.data
-        post.img_url = edit_form.img_url.data
-        post.author = current_user
-        post.body = edit_form.body.data
-        db.session.commit()
-        return redirect(url_for("show_post", post_id=post.id))
-    return render_template("make-post.html", form=edit_form, is_edit=True)
-
-
-# TODO: Use a decorator so only an admin user can delete a post
-@app.route("/delete/<int:post_id>")
-@admin_only
-def delete_post(post_id):
-    post_to_delete = db.get_or_404(Order, post_id)
-    db.session.delete(post_to_delete)
-    db.session.commit()
-    return redirect(url_for('home'))
-
-
-@app.route("/about")
-def about():
-    return render_template("about.html")
-
-
-@app.route("/contact")
-def contact():
-    return render_template("contact.html")
-
-
 if __name__ == "__main__":
-    app.run(debug=True, port=5002)
+    app.run(debug=False, port=5002)
