@@ -1,11 +1,7 @@
-{% from "bootstrap5/form.html" import render_form %} {% block content %}
-{%include "header.html" %}
+{% from "bootstrap5/form.html" import render_form %} {% block content %} {%include "header.html" %}
 
 <!-- Page Header-->
-<header
-  class="masthead"
-  style="background-image: url('../static/assets/img/home-bg.jpg')"
->
+<header class="masthead" style="background-image: url('../static/assets/img/home-bg.jpg')">
   <div class="container position-relative px-4 px-lg-5">
     <div class="row gx-4 gx-lg-5 justify-content-center">
       <div class="col-md-10 col-lg-8 col-xl-7">
@@ -18,8 +14,7 @@
   </div>
 </header>
 <!-- Main Content-->
-{% with messages = get_flashed_messages() %} {% if messages %} {%for message in
-messages %}
+{% with messages = get_flashed_messages() %} {% if messages %} {%for message in messages %}
 <p class="flash">{{ message }}</p>
 <p>{% endfor %} {%endif%} {%endwith%}</p>
 
@@ -35,8 +30,7 @@ messages %}
       </ul>
       <p>商品明細</p>
       <ol>
-        {%for key, value in order_list.items() %} {% if value != None and value
-        != 0 %}
+        {%for key, value in order_list.items() %} {% if value != None and value != 0 %}
         <li>{{key}}：{{value}}</li>
         {%endif%} {%endfor%}
       </ol>
@@ -72,16 +66,17 @@ messages %}
 
       <!-- New Post -->
       <!-- TODO: Only show Create Post button if user id is 1 (admin user) -->
-      <div class="d-flex justify-content-end mb-4">{{render_form(form)}}</div>
-      {% if user_id == 1 :%}
-
-      <!-- Pager-->
       <div class="d-flex justify-content-end mb-4">
-        <a class="btn btn-secondary text-uppercase" href="#!">Older Posts →</a>
+        <form id="submitButton" method="post">{{render_form(form)}}</form>
       </div>
-      {% endif %}
+      <div id="loading" style="display: none">訂單處理中，請稍候...</div>
     </div>
   </div>
 </div>
-
+<script>
+  document.getElementById("submitButton").addEventListener("submit", function () {
+    document.getElementById("submitButton").disabled = true;
+    document.getElementById("loading").style.display = "block";
+  });
+</script>
 {% include "footer.html" %}{% endblock %}
