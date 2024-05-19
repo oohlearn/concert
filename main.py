@@ -83,31 +83,9 @@ class Order(db.Model):
     cloth_c_130: Mapped[int] = mapped_column(Integer, nullable=True)
     cloth_c_140: Mapped[int] = mapped_column(Integer, nullable=True)
     total_cost: Mapped[int] = mapped_column(Integer, nullable=True)
-    author_id = mapped_column(Integer, db.ForeignKey("users.id"))
-    author = relationship("User", back_populates="posts")
-    comments = relationship("Comment", back_populates="parent_post")
 
 
-# TODO: Create a User table for all your registered users.
-class User(UserMixin, db.Model):
-    __tablename__ = "users"
-    id: Mapped[int] = mapped_column(Integer, primary_key=True)
-    email: Mapped[str] = mapped_column(String(100), unique=True)
-    password: Mapped[str] = mapped_column(String(100))
-    name: Mapped[str] = mapped_column(String(1000))
-    posts = relationship("Order", back_populates="author")
-    comments = relationship("Comment", back_populates="comment_author")
-
-
-class Comment(db.Model):
-    __tablename__ = "comments"
-    id: Mapped[int] = mapped_column(Integer, primary_key=True)
-    text: Mapped[str] = mapped_column(Text)
-    author_id = mapped_column(Integer, db.ForeignKey("users.id"))
-    comment_author = relationship("User", back_populates="comments")
-    post_id = mapped_column(Integer, db.ForeignKey("order.id"))
-    parent_post = relationship("Order", back_populates="comments")
-
+# TODO: Create a User table for all your registered users
 
 with app.app_context():
     db.create_all()
@@ -155,9 +133,6 @@ def add_new_post():
                 return redirect(url_for("check_order"))
             elif form.shopping.data:
                 return redirect(url_for("shopping"))
-        else:
-            flash("同一訂購者僅能下單一次，請在姓名後面加2，才能送出訂單")
-            return render_template("ticket.html", form=form)
 
     else:
         form = InfoForm()
