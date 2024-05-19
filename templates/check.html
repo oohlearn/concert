@@ -68,13 +68,13 @@
       <!-- TODO: Only show Create Post button if user id is 1 (admin user) -->
       <div class="d-flex justify-content-end mb-4">
         <form id="submitButton" method="post">{{render_form(form)}}</form>
+        <div id="loading" style="display: none">訂單處理中，請勿重複按確認訂單</div>
       </div>
-      <div id="loading" style="display: none">訂單處理中，請稍候...</div>
     </div>
   </div>
 </div>
 <script>
-  document.getElementById("submitButton").addEventListener("click", function () {
+  document.getElementById("submitButton").addEventListener("submit", function () {
     document.getElementById("submitButton").disabled = true;
     document.getElementById("loading").style.display = "block";
   });
