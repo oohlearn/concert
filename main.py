@@ -59,7 +59,7 @@ class Order(db.Model):
     __tablename__ = "order"
     id: Mapped[int] = mapped_column(Integer, primary_key=True)
     date: Mapped[str] = mapped_column(String(250), nullable=False)
-    name: Mapped[str] = mapped_column(String(250), unique=True)
+    name: Mapped[str] = mapped_column(String(250))
     phone: Mapped[str] = mapped_column(String(250))
     email: Mapped[str] = mapped_column(Text, nullable=False)
     bank_account: Mapped[str] = mapped_column(Integer, nullable=False)
@@ -155,6 +155,10 @@ def add_new_post():
                 return redirect(url_for("check_order"))
             elif form.shopping.data:
                 return redirect(url_for("shopping"))
+        else:
+            flash("同一訂購者僅能下單一次，請在姓名後面加2，才能送出訂單")
+            return render_template("ticket.html", form=form)
+
     else:
         form = InfoForm()
         if form.email.data is None or form.name.data is None or form.phone.data is None or form.bank_account.data is None or form.paid_date.data is None:
