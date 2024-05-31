@@ -108,22 +108,17 @@ def add_new_post():
     session.pop('shopping_form_data', None)
     if ticket_open:
         form = TicketForm()
-        if form.ticket.data > 2:
-            flash("門票一人限購兩張")
-            return render_template("ticket.html", form=form)
         if form.email.data is None or form.name.data is None or form.phone.data is None or form.bank_account.data is None or form.paid_date.data is None:
             flash("訂購人姓名、電話、email、匯款帳號末五碼及匯款日期為必填資訊")
             return render_template("ticket.html", form=form)
         if form.validate_on_submit():
-            if form.school.data:
-                cost = form.ticket.data * 350
-            else:
-                cost = form.ticket.data * 500
+
+            cost = form.ticket.data * 500
             session['ticket_form_data'] = {
                 'name': form.name.data,
                 'ticket': form.ticket.data,
                 'phone': form.phone.data,
-                'school': form.school.data,
+                'school': False,
                 'email': form.email.data,
                 'ticket_cost': cost,
                 "bank_account": form.bank_account.data,
@@ -219,7 +214,7 @@ def check_order():
             phone=session['ticket_form_data']['phone'],
             bank_account=session["ticket_form_data"]["bank_account"],
             paid_date=session["ticket_form_data"]["paid_date"],
-            school=session['ticket_form_data']['school'],
+            school=False,
             email=session['ticket_form_data']['email'],
             bag=session['shopping_form_data']['bag'],
             folder=session['shopping_form_data']['folder'],
@@ -245,22 +240,15 @@ def check_order():
             ticket=session['ticket_form_data']['ticket'],
             date=date.today().strftime("%B %d, %Y"),
             phone=session['ticket_form_data']["phone"],
-            school=session['ticket_form_data']['school'],
+            school=False,
             email=session['ticket_form_data']['email'],
             bank_account=session["ticket_form_data"]["bank_account"],
             paid_date=session["ticket_form_data"]["paid_date"],
             total_cost=cost)
-    if session['ticket_form_data']['school']:
-        discount = "是"
-    elif not ticket_open:
-        discount = None
-    else:
-        discount = "否"
     order_info = {
             "訂購者姓名": new_order.name,
             "電話": new_order.phone,
             "email": new_order.email,
-            "團內購票優惠身分": discount,
             "匯款帳號末五碼": new_order.bank_account,
             "匯款日期": new_order.paid_date,
     }

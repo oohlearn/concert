@@ -28,8 +28,7 @@
         <p>{% endfor %} {%endif%} {%endwith%}</p>
         <h3>下單注意事項：</h3>
         <ul>
-          <li class="note">送出訂單後請在下個頁面確認訂單明細及總金額</li>
-          <li class="note">同一訂購者只能下一筆訂單，若有需要加單，請加數字，如「李小明2」</li>
+          <li class="note">若僅購買音樂會門票，請點選『送出訂單』，並在下個頁面確認訂購者資料及總金額</li>
         </ul>
         {{ ckeditor.load() }} {{ ckeditor.config(name='body') }} {{render_form(form, novalidate=True, button_map={"submit": "primary"}) }}
       </div>

@@ -66,6 +66,8 @@
 
       <!-- New Post -->
       <!-- TODO: Only show Create Post button if user id is 1 (admin user) -->
+      <h3>若出現『訂單處理中，表示訂單已正在處理中，請勿重複送出訂單。</h3>
+
       <div class="d-flex justify-content-end mb-4">
         <form id="submitButton" method="post">{{render_form(form)}}</form>
         <div id="loading" style="display: none; color: red">訂單處理中，請勿重複按確認訂單</div>
