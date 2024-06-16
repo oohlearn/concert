@@ -9,10 +9,9 @@
           {% if is_edit: %}
           <h1>Edit Post</h1>
           {% else: %}
-          <h1>成德國小國樂團十周年音樂會</h1>
-          <h1>門票訂購</h1>
+          <h1>成德國小國樂團十周年紀念品</h1>
+          <h1>訂購人資料</h1>
           {% endif %}
-          <span class="subheading">113年6月30日@台北生技園區多功能廳</span>
         </div>
       </div>
     </div>
@@ -26,11 +25,8 @@
         {% with messages = get_flashed_messages() %} {% if messages %} {%for message in messages %}
         <p class="flash">{{ message }}</p>
         <p>{% endfor %} {%endif%} {%endwith%}</p>
-        <h3>下單注意事項：</h3>
-        <ul>
-          <li class="note">若僅購買音樂會門票，請點選『送出訂單』，並在下個頁面確認訂購者資料及總金額</li>
-        </ul>
-        {{ ckeditor.load() }} {{ ckeditor.config(name='body') }} {{render_form(form, novalidate=True, button_map={"submit": "primary"}) }}
+
+        {{render_form(form, novalidate=True, button_map={"submit": "primary"}) }}
       </div>
     </div>
   </div>

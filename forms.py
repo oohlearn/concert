@@ -45,6 +45,5 @@ class ShoppingForm(FlaskForm):
     submit = SubmitField("送出訂單")
 
 
-
 class CheckForm(FlaskForm):
     submit_btn = SubmitField("確認訂單")

@@ -51,7 +51,7 @@ app.config['SQLALCHEMY_DATABASE_URI'] = os.environ.get(
 
 db = SQLAlchemy(model_class=Base)
 db.init_app(app)
-ticket_open = True
+ticket_open = False
 
 
 # CONFIGURE TABLES
@@ -134,8 +134,6 @@ def add_new_post():
         if form.email.data is None or form.name.data is None or form.phone.data is None or form.bank_account.data is None or form.paid_date.data is None:
             flash("訂購人姓名、電話、email、匯款帳號末五碼及匯款日期為必填資訊")
             return render_template("ticket.html", form=form)
-        if ticket_count >= ticket_limit:
-            flash("限量是殘酷的，門票已停止販售囉～")
         if form.validate_on_submit():
             session['ticket_form_data'] = {
                 'name': form.name.data,
