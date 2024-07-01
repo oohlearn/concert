@@ -26,7 +26,7 @@
         <p class="flash">{{ message }}</p>
         <p>{% endfor %} {%endif%} {%endwith%}</p>
         <div>
-          <a class="btn btn-primary" href="{{url_for('redirect_to_711')}}" target="_blank"
+          <a class="btn btn-warning" href="{{url_for('redirect_to_711')}}" target="_blank"
             >7-11門市查詢</a
           >
         </div>
@@ -34,7 +34,7 @@
         {{render_form(form, novalidate=True, button_map={"submit": "primary"}) }}
         <br />
         <div>
-          <a class="btn btn-primary" href="{{url_for('redirect_to_711')}}" target="_blank"
+          <a class="btn btn-warning" href="{{url_for('redirect_to_711')}}" target="_blank"
             >7-11門市查詢</a
           >
         </div>
