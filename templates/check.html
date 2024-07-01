@@ -24,61 +24,56 @@
       <h3>您的訂單資料如下，請確認以下內容是否正確</h3>
       <p>訂購者資訊</p>
       <ul>
-        {%for key, value in order_info.items() %} {% if value != None %}
+        {%for key, value in order_info.items() %}
+        <!--  -->
+        {% if value != None and key != "運費" and value != "" %}
         <li>{{key}}：{{value}}</li>
         {%endif%}{%endfor%}
       </ul>
-      <p>商品明細</p>
-      <ol>
-        {%for key, value in order_list.items() %} {% if value != None and value != 0 %}
-        <li>{{key}}：{{value}}</li>
-        {%endif%} {%endfor%}
-      </ol>
-      <h3 style="color: brown">總金額：{{cost}}</h3>
-      <hr />
-      <br />
-      <p>
-        商品價格<br />
-        {% if ticket_open%} 音樂會門票：原價500元/張，團內購票350/張<br />
-        {%endif%} 帆布包：300元/個<br />
-        譜夾：130元/個<br />
-        團T：200元/件
-      </p>
-
-      <!-- Post preview-->
-      {% for post in all_posts %}
-      <div class="post-preview">
-        <a href="{{ url_for('show_post', post_id=post.id) }}">
-          <h2 class="post-title">{{ post.title }}</h2>
-          <h3 class="post-subtitle">{{ post.subtitle }}</h3>
-        </a>
-        <p class="post-meta">
-          Posted by
-          <a href="#">{{post.author.name}}</a>
-          on {{post.date}}
-          <!-- TODO: Only show delete button if user id is 1 (admin user) -->
-          <a href="{{url_for('delete_post', post_id=post.id) }}">✘</a>
+      <div>
+        <h5>請務必確認取件門市資料正確</h5>
+        <div>
+          <a class="btn btn-primary" href="{{url_for('redirect_to_711')}}" target="_blank"
+            >7-11門市查詢</a
+          >
+        </div>
+        <p>商品明細</p>
+        <ol>
+          {%for key, value in order_list.items() %} {% if value != None and value != 0 %}
+          <li>{{key}}：{{value}}</li>
+          {%endif%} {%endfor%}
+          <!--  -->
+          {%for key, value in order_info.items() %} {% if value == "7-11店到店" %}
+          <li>7-11店到店運費（60元）</li>
+          {%endif%} {%endfor%}
+        </ol>
+        <h3 style="color: brown">總金額：{{cost}}</h3>
+        <hr />
+        <br />
+        <p>
+          商品價格<br />
+          {% if ticket_open%} 音樂會門票：原價500元/張，團內購票350/張<br />
+          {%endif%} 帆布包：300元/個<br />
+          譜夾：130元/個<br />
+          團T：200元/件
         </p>
-      </div>
-      <!-- Divider-->
-      <hr class="my-4" />
-      {% endfor %}
 
-      <!-- New Post -->
-      <!-- TODO: Only show Create Post button if user id is 1 (admin user) -->
-      <h3>若出現『訂單處理中，表示訂單已正在處理中，請勿重複送出訂單。</h3>
+        <!-- New Post -->
+        <!-- TODO: Only show Create Post button if user id is 1 (admin user) -->
+        <h3>若出現『訂單處理中，表示訂單已正在處理中，請勿重複送出訂單。</h3>
 
-      <div class="d-flex justify-content-end mb-4">
-        <form id="submitButton" method="post">{{render_form(form)}}</form>
-        <h2 id="loading" style="display: none; color: red">訂單處理中，請勿重複按確認訂單</h2>
+        <div class="d-flex justify-content-end mb-4">
+          <form id="submitButton" method="post">{{render_form(form)}}</form>
+          <h2 id="loading" style="display: none; color: red">訂單處理中，請勿重複按確認訂單</h2>
+        </div>
       </div>
     </div>
   </div>
+  <script>
+    document.getElementById("submitButton").addEventListener("submit", function () {
+      document.getElementById("submitButton").disabled = true;
+      document.getElementById("loading").style.display = "block";
+    });
+  </script>
+  {% include "footer.html" %}{% endblock %}
 </div>
-<script>
-  document.getElementById("submitButton").addEventListener("submit", function () {
-    document.getElementById("submitButton").disabled = true;
-    document.getElementById("loading").style.display = "block";
-  });
-</script>
-{% include "footer.html" %}{% endblock %}

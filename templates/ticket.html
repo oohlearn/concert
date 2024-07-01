@@ -25,8 +25,20 @@
         {% with messages = get_flashed_messages() %} {% if messages %} {%for message in messages %}
         <p class="flash">{{ message }}</p>
         <p>{% endfor %} {%endif%} {%endwith%}</p>
+        <div>
+          <a class="btn btn-primary" href="{{url_for('redirect_to_711')}}" target="_blank"
+            >7-11門市查詢</a
+          >
+        </div>
 
         {{render_form(form, novalidate=True, button_map={"submit": "primary"}) }}
+        <br />
+        <div>
+          <a class="btn btn-primary" href="{{url_for('redirect_to_711')}}" target="_blank"
+            >7-11門市查詢</a
+          >
+        </div>
+        <div><img src="./static/assets/分店.png" alt="" /></div>
       </div>
     </div>
   </div>

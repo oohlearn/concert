@@ -64,7 +64,10 @@ class Order(db.Model):
     email: Mapped[str] = mapped_column(Text, nullable=False)
     bank_account: Mapped[str] = mapped_column(Integer, nullable=False)
     paid_date: Mapped[str] = mapped_column(String(250), nullable=False)
-    school: Mapped[bool] = mapped_column(Boolean, default=False)
+    deliver: Mapped[str] = mapped_column(String(250), nullable=False)
+    shop: Mapped[str] = mapped_column(String(250))
+    shop_code: Mapped[str] = mapped_column(String(250))
+    deliver_paid: Mapped[int] = mapped_column(Integer, nullable=True)
     ticket: Mapped[int] = mapped_column(Integer, nullable=True)
     bag: Mapped[int] = mapped_column(Integer, nullable=True)
     folder: Mapped[int] = mapped_column(Integer, nullable=True)
@@ -143,10 +146,14 @@ def add_new_post():
                 'email': form.email.data,
                 'ticket_cost': 0,
                 "bank_account": form.bank_account.data,
-                "paid_date": form.paid_date.data.strftime('%Y/%m/%d')
+                "paid_date": form.paid_date.data.strftime('%Y/%m/%d'),
+                "deliver": form.deliver.data,
+                "shop": form.shop.data,
+                "shop_code": form.shop_code.data
             }
             return redirect(url_for("shopping"))
     return render_template("ticket.html", form=form)
+
 
 
 @app.route("/shopping", methods=["POST", "GET"])
@@ -201,10 +208,13 @@ def check_order():
     global ticket_open
     global ticket_limit
     form = CheckForm()
+    deliver_paid = 0
     order_info = {}
     order_list = {}
     if "shopping_form_data" in session:
-        cost = session['shopping_form_data']["shopping_cost"] + session['ticket_form_data']["ticket_cost"]
+        if session["ticket_form_data"]["deliver"] == "7-11店到店":
+            deliver_paid = 60
+        cost = session['shopping_form_data']["shopping_cost"] + session['ticket_form_data']["ticket_cost"]+deliver_paid
         new_order = Order(
             name=session['ticket_form_data']['name'],
             ticket=session['ticket_form_data']['ticket'],
@@ -212,8 +222,11 @@ def check_order():
             phone=session['ticket_form_data']['phone'],
             bank_account=session["ticket_form_data"]["bank_account"],
             paid_date=session["ticket_form_data"]["paid_date"],
-            school=False,
             email=session['ticket_form_data']['email'],
+            deliver=session['ticket_form_data']["deliver"],
+            shop=session['ticket_form_data']["shop"],
+            shop_code=session['ticket_form_data']["shop_code"],
+            deliver_paid=deliver_paid,
             bag=session['shopping_form_data']['bag'],
             folder=session['shopping_form_data']['folder'],
             cloth_a_xs=session["shopping_form_data"]["cloth_a_xs"],
@@ -225,7 +238,6 @@ def check_order():
             cloth_a_3xl=session["shopping_form_data"]["cloth_a_3xl"],
             cloth_a_4xl=session["shopping_form_data"]["cloth_a_4xl"],
             cloth_a_6xl=session["shopping_form_data"]["cloth_a_6xl"],
-
             cloth_c_110=session["shopping_form_data"]["cloth_c_110"],
             cloth_c_120=session["shopping_form_data"]["cloth_c_120"],
             cloth_c_130=session["shopping_form_data"]["cloth_c_130"],
@@ -242,6 +254,10 @@ def check_order():
             email=session['ticket_form_data']['email'],
             bank_account=session["ticket_form_data"]["bank_account"],
             paid_date=session["ticket_form_data"]["paid_date"],
+            deliver=session['ticket_form_data']["deliver"],
+            shop=session['ticket_form_data']["shop"],
+            shop_code=session['ticket_form_data']["shop_code"],
+            deliver_paid=deliver_paid,
             total_cost=cost)
     order_info = {
             "訂購者姓名": new_order.name,
@@ -249,6 +265,10 @@ def check_order():
             "email": new_order.email,
             "匯款帳號末五碼": new_order.bank_account,
             "匯款日期": new_order.paid_date,
+            "取貨方式": new_order.deliver,
+            "門市名稱": new_order.shop,
+            "門市店號": new_order.shop_code,
+            "運費": new_order.deliver_paid
     }
     order_list = {
             "音樂會門票": new_order.ticket,
@@ -270,6 +290,7 @@ def check_order():
             "團T：小孩 - 身高140公分": new_order.cloth_c_140,
         }
     if form.validate_on_submit():
+        print(new_order)
         mail_content = """
         <h3>您的訂單資料如下，請確認以下內容是否正確，並於訂購當日匯款</h3>
         <h3>若有問題請洽小佳老師</h3>
@@ -301,7 +322,7 @@ def check_order():
         my_email = "testc1386@gmail.com"
         password = os.environ.get("PASSWORD")
         mime = MIMEText(mail_content, "html", "utf-8")
-        mime["Subject"] = "成德國小十周年音樂會門票及紀念品訂單明細"
+        mime["Subject"] = "成德國小十周年紀念品訂單明細"
         msg = mime.as_string()
         with smtplib.SMTP_SSL("smtp.gmail.com", 465) as connection:
             connection.login(user=my_email, password=password)
@@ -325,5 +346,10 @@ def check_order():
                            )
 
 
+@app.route("/search_7-11")
+def redirect_to_711():
+    return render_template("intermediate.html")
+
+
 if __name__ == "__main__":
-    app.run(debug=False, port=5002)
+    app.run(debug=True, port=5002)
