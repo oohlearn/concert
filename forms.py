@@ -17,14 +17,14 @@ class TicketForm(FlaskForm):
 
 
 class InfoForm(FlaskForm):
-    name = StringField("訂購者姓名（必填）", validators=[DataRequired()])
+    name = StringField("收件人姓名（必填）", validators=[DataRequired()])
     child = StringField("學生姓名（若您為學生家長）")
-    phone = StringField("連絡電話（必填）", validators=[DataRequired()])
+    phone = StringField("手機（必填）", validators=[DataRequired()])
     email = StringField("Email（必填）", validators=[DataRequired()])
     bank_account = IntegerField("匯款帳號末五碼（必填）", validators=[DataRequired()])
     paid_date = DateField("匯款日期（必填）", validators=[DataRequired()])
     deliver = RadioField("取貨方式（必填）", choices=[("成德國小輔導室親取", "成德國小輔導室親取，7/29~8/2，每天08:00-16:00"),
-                                              ("7-11店到店", "7-11店到店（需額外支付運費60元）")])
+                                              ("7-11店到店", "7-11店到店（須額外支付運費60元）")])
     shop = StringField("7-11取貨門市名稱（請於下方連結查詢7-11分店資訊）", default="")
     shop_code = StringField("門市店號", default="")
     shopping = SubmitField("訂購紀念品")
